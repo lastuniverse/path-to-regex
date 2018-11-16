@@ -1,0 +1,36 @@
+{
+  "name": "parh_to_regex",
+  "version": "0.0.1",
+  "description": "Turn a path string such as /user/:id or /user/:id(\\d+) into a regular expression",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lastuniverse/parh_to_regex.git"
+  },
+  "keywords": [
+    "path-to-regex",
+    "regexp",
+    "router",
+    "nodejs",
+    "expressjs"
+  ],
+  "engines" : { 
+    "node" : ">=10.11.0" 
+  },
+  "author": "Roman Surmanidze aka lastuniverse",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "mocha": "*",
+    "chai": "*"
+  },
+  "bugs": {
+    "url": "https://github.com/lastuniverse/parh_to_regex/issues"
+  },
+  "homepage": "https://github.com/lastuniverse/parh_to_regex#readme"
+}
