@@ -46,6 +46,8 @@ var result = matcher.match('/foo/12345');
 
 
 
+[![NPM](https://nodei.co/npm/path-to-regex.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/path-to-regex/)
+
 [npm-image]: https://img.shields.io/npm/v/path-to-regex.svg?style=flat
 [npm-url]: https://npmjs.org/package/path-to-regex
 [david-image]: http://img.shields.io/david/lastuniverse/path-to-regex.svg?style=flat
