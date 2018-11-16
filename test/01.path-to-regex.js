@@ -4,7 +4,7 @@ const assert  = chai.assert;
 // const should  = chai.should;
 
 
-const PathToRegex = require("../lib/path-to-regex.js");
+const PathToRegex = require("../index.js");
 
 
 describe("Тестируем модуль преобразования пути в RegExp", function() {
