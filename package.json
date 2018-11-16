@@ -24,7 +24,7 @@
     "node": ">=10.11.0"
   },
   "author": "Roman Surmanidze aka lastuniverse",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "devDependencies": {
     "mocha": "*",
     "chai": "*"
