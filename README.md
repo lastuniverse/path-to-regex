@@ -1,4 +1,4 @@
-# path_to_regex
+# path-to-regex
 
 > Turn a path string such as `/user/:id` or `/user/:id(\d+)`  into a regular expression 
 
