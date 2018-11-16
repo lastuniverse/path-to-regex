@@ -42,7 +42,7 @@ var result = matcher.match('/foo/12345');
 // result = { bar: '12345' }
 ```
 
-
+... documentation in processed
 
 
 
