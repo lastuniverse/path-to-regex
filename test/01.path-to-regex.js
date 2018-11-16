@@ -59,7 +59,7 @@ describe("Тестируем модуль преобразования пути 
   });  
 
   const re3 = new PathToRegex("/foo/:fooid/bar/:barid");
-  // console.log("REGEX:", "\t\t"+re3.regexp, "\t\t", re3.regexp, "\t\t", re3.regstr, "\t\t", re3.path);
+  
   it("создаем RegExp из \"/foo/:fooid/bar/:barid\"", function() {
     assert.equal( re3 instanceof PathToRegex, true);
     assert.equal( ""+re3.regexp, ""+/^\/foo\/(?<fooid>[^\/]+?)\/bar\/(?<barid>[^\/]+?)$/ );
@@ -71,6 +71,8 @@ describe("Тестируем модуль преобразования пути 
     assert.equal( !!re3.match("/foo/123"), false);
     assert.equal( !!re3.match("/foo/123/bar"), false);
     const params = re3.match("/foo/123/bar/456");
+    console.log("REGEX:", "\t\t"+re3.regexp, "\t\t", re3.regexp, "\t\t", re3.regstr, "\t\t", re3.path, "\t\t", re3.keys);
+    console.log("REGEX:", "\t\t", params);
     assert.equal( !!params, true);
   });  
 
