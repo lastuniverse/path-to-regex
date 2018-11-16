@@ -1,5 +1,5 @@
 {
-  "name": "path_to_regex",
+  "name": "path-to-regex",
   "version": "1.0.0",
   "description": "Turn a path string such as /user/:id or /user/:id(\\d+) into a regular expression",
   "main": "index.js",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lastuniverse/path_to_regex.git"
+    "url": "git+https://github.com/lastuniverse/path-to-regex.git"
   },
   "keywords": [
     "path-to-regex",
@@ -30,7 +30,7 @@
     "chai": "*"
   },
   "bugs": {
-    "url": "https://github.com/lastuniverse/path_to_regex/issues"
+    "url": "https://github.com/lastuniverse/path-to-regex/issues"
   },
-  "homepage": "https://github.com/lastuniverse/path_to_regex#readme"
+  "homepage": "https://github.com/lastuniverse/path-to-regex#readme"
 }
