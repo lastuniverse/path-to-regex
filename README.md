@@ -26,7 +26,6 @@ var matcher = new pathToRegex(path_template, options?);
 - **options**
   - **case** When `true` the regexp will be case sensitive. (default: `true`)
   - **splitters** The chars list for splited patch string. (default: `'/'`)
-  - **escapeChars** The chars list for escaped. (default: `'/'`)
   - **fromStart** When `true` the regexp will match from the beginning of the string. (default: `true`)
   - **toEnd** When `true` the regexp will match to the end of the string. (default: `true`)
 
