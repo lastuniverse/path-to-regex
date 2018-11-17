@@ -32,169 +32,95 @@ var matcher = new pathToRegex(path_template, options?);
 
 ## Samples
 
-### Demonstration of processing a simple key identifier `:keyname`
+#### Demonstration of processing a simple key identifier `:keyname`
 ```javascript
 const parser = new pathToRegex('/foo/:bar');
 // parser.regexp:  /^\/foo\/([^\/]+)[\/]?$/
 
-const result = regex.match('/foo/asd');
-/* result:
- { bar: 'asd' } 
-*/
+const result = regex.match('/foo/asd');  // result: { bar: 'asd' }
 
+const result = regex.match('/foo/123');  // result: { bar: '123' }
 
-const result = regex.match('/foo/123');
-/* result:
- { bar: '123' } 
-*/
-
-
-const result = regex.match('/foo/123/bar');
-/* result:
- undefined 
-*/
-
+const result = regex.match('/foo/123/bar');  // result: undefined
 ```
 
 
 
 
-### Demonstration of processing a key identifier with a specific content `:keyname(\\d+)`
+#### Demonstration of processing a key identifier with a specific content `:keyname(\\d+)`
 ```javascript
 const parser = new pathToRegex('/foo/:bar(\\d+)');
 // parser.regexp:  /^\/foo\/(\d+)[\/]?$/
 
-const result = regex.match('/foo/123');
-/* result:
- { bar: '123' } 
-*/
+const result = regex.match('/foo/123');  // result: { bar: '123' }
 
+const result = regex.match('/foo/asd');  // result: undefined
 
-const result = regex.match('/foo/asd');
-/* result:
- undefined 
-*/
+const result = regex.match('/foo/123asd');  // result: undefined
 
-
-const result = regex.match('/foo/123asd');
-/* result:
- undefined 
-*/
-
-
-const result = regex.match('/foo/123/bar');
-/* result:
- undefined 
-*/
-
+const result = regex.match('/foo/123/bar');  // result: undefined
 ```
 
 
 
 
-### Demonstration of processing a multiple key identifiers `:keyname1 ... :keyname2`
+#### Demonstration of processing a multiple key identifiers `:keyname1 ... :keyname2`
 ```javascript
 const parser = new pathToRegex('/user/:foo/:bar');
 // parser.regexp:  /^\/user\/([^\/]+)\/([^\/]+)[\/]?$/
 
-const result = regex.match('/user/123/asd');
-/* result:
- { foo: '123', bar: 'asd' } 
-*/
+const result = regex.match('/user/123/asd');  // result: { foo: '123', bar: 'asd' }
 
-
-const result = regex.match('/user/asd/123');
-/* result:
- { foo: 'asd', bar: '123' } 
-*/
-
+const result = regex.match('/user/asd/123');  // result: { foo: 'asd', bar: '123' }
 ```
 
 
 
 
-### Demonstration of processing a key identifiers with a repeated names `:keyname(\\d+) ... :keyname(\d+)`
+#### Demonstration of processing a key identifiers with a repeated names `:keyname(\\d+) ... :keyname(\d+)`
 ```javascript
 const parser = new pathToRegex('/foo/:bar/:bar');
 // parser.regexp:  /^\/foo\/([^\/]+)\/([^\/]+)[\/]?$/
 
-const result = regex.match('/foo/123/asd');
-/* result:
- { bar: [ '123', 'asd' ] } 
-*/
+const result = regex.match('/foo/123/asd');  // result: { bar: [ '123', 'asd' ] }
 
-
-const result = regex.match('/foo/asd/123');
-/* result:
- { bar: [ 'asd', '123' ] } 
-*/
-
+const result = regex.match('/foo/asd/123');  // result: { bar: [ 'asd', '123' ] }
 ```
 
 
 
 
-### Demonstration of processing a key identifier with a quantifier `?`
+#### Demonstration of processing a key identifier with a quantifier `?`
 ```javascript
 const parser = new pathToRegex('/foo/:bar?');
 // parser.regexp:  /^\/foo\/?([^\/]+)?[\/]?$/
 
-const result = regex.match('/foo/123');
-/* result:
- { bar: '123' } 
-*/
+const result = regex.match('/foo/123');  // result: { bar: '123' }
 
+const result = regex.match('/foo/');  // result: { bar: undefined }
 
-const result = regex.match('/foo/');
-/* result:
- { bar: undefined } 
-*/
-
-
-const result = regex.match('/foo');
-/* result:
- { bar: undefined } 
-*/
-
+const result = regex.match('/foo');  // result: { bar: undefined }
 ```
 
 
 
 
-### Demonstration of processing a key identifier with a quantifier `*`
+#### Demonstration of processing a key identifier with a quantifier `*`
 ```javascript
 const parser = new pathToRegex('/foo/:bar*');
 // parser.regexp:  /^\/foo\/?((?:\/[^\/]+)*)[\/]?$/
 
-const result = regex.match('/foo/123');
-/* result:
- { bar: [ '123' ] } 
-*/
+const result = regex.match('/foo/123');  // result: { bar: [ '123' ] }
 
+const result = regex.match('/foo/123/456');  // result: { bar: [ '123', '456' ] }
 
-const result = regex.match('/foo/123/456');
-/* result:
- { bar: [ '123', '456' ] } 
-*/
+const result = regex.match('/foo/123/456/');  // result: { bar: [ '123', '456' ] }
 
+const result = regex.match('/foo/');  // result: { bar: [] }
 
-const result = regex.match('/foo/123/456/');
-/* result:
- { bar: [ '123', '456' ] } 
-*/
-
-
-const result = regex.match('/foo/');
-/* result:
- { bar: [] } 
-*/
-
-
-const result = regex.match('/foo');
-/* result:
- { bar: [] } 
-*/
+const result = regex.match('/foo');  // result: { bar: [] }
 ```
+
 
 
 
