@@ -1,10 +1,12 @@
+const PathToRegex = require("../index.js");
+
 const chai = require('chai');
 const assert  = chai.assert;
 // const expect  = chai.expect;
 // const should  = chai.should;
 
 
-const PathToRegex = require("../index.js");
+
 
 
 describe("Тестируем модуль преобразования пути в RegExp", function() {
@@ -71,18 +73,37 @@ describe("Тестируем модуль преобразования пути 
     assert.equal( !!re3.match("/foo/123"), false);
     assert.equal( !!re3.match("/foo/123/bar"), false);
     const params = re3.match("/foo/123/bar/456");
-    console.log("REGEX:", "\t\t"+re3.regexp, "\t\t", re3.regexp, "\t\t", re3.regstr, "\t\t", re3.path, "\t\t", re3.keys);
-    console.log("REGEX:", "\t\t", params);
     assert.equal( !!params, true);
   });  
 
-  it("соотносим RegExp /^\\/foo\/(?<fooid>[^\\/]+?)\\/bar\\/(?<barid>[^\\/]+?)$/ (путь \"/foo/:fooid/bar/:barid\" ) со строками \"/foo/111/bar/222\" \"/foo/id1/bar/id22\" и проверяем наличие ключей fooid и barid и соответствие их значений", function() {
+  it("соотносим RegExp /^\\/foo\\/(?<fooid>[^\\/]+?)\\/bar\\/(?<barid>[^\\/]+?)$/ (путь \"/foo/:fooid/bar/:barid\" ) со строками \"/foo/111/bar/222\" \"/foo/id1/bar/id22\" и проверяем наличие ключей fooid и barid и соответствие их значений", function() {
     const params1 = re3.match("/foo/111/bar/222");
     const params2 = re3.match("/foo/id1/bar/id22");
     assert.equal( params1.fooid, "111");
     assert.equal( params1.barid, "222");
     assert.equal( params2.fooid, "id1");
     assert.equal( params2.barid, "id22");
+  });
+
+  const re4 = new PathToRegex("/user/:id(\\d+)");
+  console.log("REGEX:", "\t\t"+re4.regexp, "\t\t", re4.regexp, "\t\t", re4.regstr, "\t\t", re4.path);
+    // console.log("REGEX:", "\t\t"+re3.regexp, "\t\t", re3.regexp, "\t\t", re3.regstr, "\t\t", re3.path, "\t\t", re3.keys);
+    // console.log("REGEX:", "\t\t", params); 
+  it("создаем RegExp из \"/user/:id(\\\\d+)\"", function() {
+    assert.equal( re4 instanceof PathToRegex, true);
+    assert.equal( ""+re4.regexp, ""+/^\/user\/(?<id>\d+)$/ );
+  });
+
+
+  it("соотносим RegExp /^\\/user\\/(?<id>\\d+)$/ (путь \"/user/:id(\\\\d+)\" ) со строками \"/\" \"/user\" \"/user/123\" \"/user/123/foo\" \"/user/aaa\" ", function() {
+    assert.equal( !!re4.match("/"), false);
+    assert.equal( !!re4.match("/user"), false);
+    const params = re4.match("/user/123");
+    assert.equal( !!params, true);
+    assert.equal( params.id, "123");
+    assert.equal( !!re4.match("/user/123/foo"), false);
+    assert.equal( !!re4.match("/user/aaa"), false);
   });  
+
 
 });
