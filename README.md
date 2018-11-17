@@ -37,11 +37,11 @@ var matcher = new pathToRegex(path_template, options?);
 let parser = new pathToRegex('/foo/:bar');
 // parser.regexp:  /^\/foo\/([^\/]+)[\/]?$/
 
-let result = regex.match('/foo/asd');  // result: { bar: 'asd' }
+let result = parser.match('/foo/asd');  // result: { bar: 'asd' }
 
-let result = regex.match('/foo/123');  // result: { bar: '123' }
+let result = parser.match('/foo/123');  // result: { bar: '123' }
 
-let result = regex.match('/foo/123/bar');  // result: undefined
+let result = parser.match('/foo/123/bar');  // result: undefined
 ```
 
 
@@ -52,13 +52,13 @@ let result = regex.match('/foo/123/bar');  // result: undefined
 let parser = new pathToRegex('/foo/:bar(\\d+)');
 // parser.regexp:  /^\/foo\/(\d+)[\/]?$/
 
-let result = regex.match('/foo/123');  // result: { bar: '123' }
+let result = parser.match('/foo/123');  // result: { bar: '123' }
 
-let result = regex.match('/foo/asd');  // result: undefined
+let result = parser.match('/foo/asd');  // result: undefined
 
-let result = regex.match('/foo/123asd');  // result: undefined
+let result = parser.match('/foo/123asd');  // result: undefined
 
-let result = regex.match('/foo/123/bar');  // result: undefined
+let result = parser.match('/foo/123/bar');  // result: undefined
 ```
 
 
@@ -69,9 +69,9 @@ let result = regex.match('/foo/123/bar');  // result: undefined
 let parser = new pathToRegex('/user/:foo/:bar');
 // parser.regexp:  /^\/user\/([^\/]+)\/([^\/]+)[\/]?$/
 
-let result = regex.match('/user/123/asd');  // result: { foo: '123', bar: 'asd' }
+let result = parser.match('/user/123/asd');  // result: { foo: '123', bar: 'asd' }
 
-let result = regex.match('/user/asd/123');  // result: { foo: 'asd', bar: '123' }
+let result = parser.match('/user/asd/123');  // result: { foo: 'asd', bar: '123' }
 ```
 
 
@@ -82,9 +82,9 @@ let result = regex.match('/user/asd/123');  // result: { foo: 'asd', bar: '123' 
 let parser = new pathToRegex('/foo/:bar/:bar');
 // parser.regexp:  /^\/foo\/([^\/]+)\/([^\/]+)[\/]?$/
 
-let result = regex.match('/foo/123/asd');  // result: { bar: [ '123', 'asd' ] }
+let result = parser.match('/foo/123/asd');  // result: { bar: [ '123', 'asd' ] }
 
-let result = regex.match('/foo/asd/123');  // result: { bar: [ 'asd', '123' ] }
+let result = parser.match('/foo/asd/123');  // result: { bar: [ 'asd', '123' ] }
 ```
 
 
@@ -95,11 +95,11 @@ let result = regex.match('/foo/asd/123');  // result: { bar: [ 'asd', '123' ] }
 let parser = new pathToRegex('/foo/:bar?');
 // parser.regexp:  /^\/foo\/?([^\/]+)?[\/]?$/
 
-let result = regex.match('/foo/123');  // result: { bar: '123' }
+let result = parser.match('/foo/123');  // result: { bar: '123' }
 
-let result = regex.match('/foo/');  // result: { bar: undefined }
+let result = parser.match('/foo/');  // result: { bar: undefined }
 
-let result = regex.match('/foo');  // result: { bar: undefined }
+let result = parser.match('/foo');  // result: { bar: undefined }
 ```
 
 
@@ -110,45 +110,45 @@ let result = regex.match('/foo');  // result: { bar: undefined }
 let parser = new pathToRegex('/foo/:bar*');
 // parser.regexp:  /^\/foo\/?((?:\/[^\/]+)*)[\/]?$/
 
-let result = regex.match('/foo');  // result: { bar: [] }
+let result = parser.match('/foo');  // result: { bar: [] }
 
-let result = regex.match('/foo/');  // result: { bar: [] }
+let result = parser.match('/foo/');  // result: { bar: [] }
 
-let result = regex.match('/foo/123');  // result: { bar: [ '123' ] }
+let result = parser.match('/foo/123');  // result: { bar: [ '123' ] }
 
-let result = regex.match('/foo/123/456');  // result: { bar: [ '123', '456' ] }
+let result = parser.match('/foo/123/456');  // result: { bar: [ '123', '456' ] }
 
-let result = regex.match('/foo/123/456/');  // result: { bar: [ '123', '456' ] }
+let result = parser.match('/foo/123/456/');  // result: { bar: [ '123', '456' ] }
 
 
 let parser = new pathToRegex('/foo/ids: :bar*/:count?');
 // parser.regexp:  /^\/foo\/ids\: ?((?:[^\/]+\ ?)*)\/?([^\/]+)?[\/]?$/
 
-let result = regex.match('/foo/ids: 123 456 789');  // result: { bar: [ '123 456 789' ], count: undefined }
+let result = parser.match('/foo/ids: 123 456 789');  // result: { bar: [ '123 456 789' ], count: undefined }
 
-let result = regex.match('/foo/ids: 123 456 789/3');  // result: { bar: [ '123 456 789' ], count: '3' }
+let result = parser.match('/foo/ids: 123 456 789/3');  // result: { bar: [ '123 456 789' ], count: '3' }
 
 
 let parser = new pathToRegex('/foo/:bar+');
 // parser.regexp:  /^\/foo\/?((?:\/[^\/]+)+)[\/]?$/
 
-let result = regex.match('/foo');  // result: undefined
+let result = parser.match('/foo');  // result: undefined
 
-let result = regex.match('/foo/');  // result: undefined
+let result = parser.match('/foo/');  // result: undefined
 
-let result = regex.match('/foo/123');  // result: { bar: [ '123' ] }
+let result = parser.match('/foo/123');  // result: { bar: [ '123' ] }
 
-let result = regex.match('/foo/123/456');  // result: { bar: [ '123', '456' ] }
+let result = parser.match('/foo/123/456');  // result: { bar: [ '123', '456' ] }
 
-let result = regex.match('/foo/123/456/');  // result: { bar: [ '123', '456' ] }
+let result = parser.match('/foo/123/456/');  // result: { bar: [ '123', '456' ] }
 
 
 let parser = new pathToRegex('/foo/ids-,:bar+/:count?');
 // parser.regexp:  /^\/foo\/ids-,?((?:[^\/]+\,?)+)\/?([^\/]+)?[\/]?$/
 
-let result = regex.match('/foo/ids-123,456,789');  // result: { bar: [ '123,456,789' ], count: undefined }
+let result = parser.match('/foo/ids-123,456,789');  // result: { bar: [ '123,456,789' ], count: undefined }
 
-let result = regex.match('/foo/ids-123,456,789/3');  // result: { bar: [ '123,456,789' ], count: '3' }
+let result = parser.match('/foo/ids-123,456,789/3');  // result: { bar: [ '123,456,789' ], count: '3' }
 ```
 
 
@@ -159,7 +159,7 @@ let result = regex.match('/foo/ids-123,456,789/3');  // result: { bar: [ '123,45
 let parser = new pathToRegex('/user/:id/bar/:key(\\d+):post?fak/:key(\d+)*:foo+/test/pictures-,:multi(\w+?\.png)*/:key?');
 // parser.regexp:  /^\/user\/([^\/]+)\/bar\/(\d+)([^\/]+)?fak\/?((?:\d+\/?)*)?((?:[^\/]+\*?)+)\/test\/pictures-,?((?:\w+?\.png\,?)*)\/?([^\/]+)?[\/]?$/
 
-let result = regex.match('/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png,p02.png,p03.png');
+let result = parser.match('/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png,p02.png,p03.png');
 /* result:
  { id: '123',
   key: [ '111', '222' ],
@@ -168,7 +168,7 @@ let result = regex.match('/user/123/bar/111qwertyfak/222foo/test/pictures-p01.pn
   multi: [ 'p01.png', 'p02.png', 'p03.png' ] } 
 */
 
-let result = regex.match('/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png,p02.png,p03.png/333');
+let result = parser.match('/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png,p02.png,p03.png/333');
 /* result:
  { id: '123',
   key: [ '111', '222', '333' ],
@@ -181,7 +181,7 @@ let result = regex.match('/user/123/bar/111qwertyfak/222foo/test/pictures-p01.pn
 let parser = new pathToRegex('/user/:id/bar/:key(\\d+):post?fak/:key(\d+)*:foo+/test/pictures- :multi(\w+?\.png)*/:key*');
 // parser.regexp:  /^\/user\/([^\/]+)\/bar\/(\d+)([^\/]+)?fak\/?((?:\d+\/?)*)?((?:[^\/]+\*?)+)\/test\/pictures- ?((?:\w+?\.png\ ?)*)\/?((?:\/[^\/]+)*)[\/]?$/
 
-let result = regex.match('/user/123/bar/111fak/222foo/test/pictures-p01.png p02.png p03.png');
+let result = parser.match('/user/123/bar/111fak/222foo/test/pictures-p01.png p02.png p03.png');
 /* result:
  { id: '123',
   key: [ '111', '222' ],
@@ -190,7 +190,7 @@ let result = regex.match('/user/123/bar/111fak/222foo/test/pictures-p01.png p02.
   multi: [ 'p01.png', 'p02.png', 'p03.png' ] } 
 */
 
-let result = regex.match('/user/123/bar/111fak/222foo/test/pictures-p01.png p02.png p03.png/333');
+let result = parser.match('/user/123/bar/111fak/222foo/test/pictures-p01.png p02.png p03.png/333');
 /* result:
  { id: '123',
   key: [ '111', '222', '333' ],
@@ -199,7 +199,7 @@ let result = regex.match('/user/123/bar/111fak/222foo/test/pictures-p01.png p02.
   multi: [ 'p01.png', 'p02.png', 'p03.png' ] } 
 */
 
-let result = regex.match('/user/123/bar/111fak/222foo/test/pictures-p01.png p02.png p03.png/333/444/');
+let result = parser.match('/user/123/bar/111fak/222foo/test/pictures-p01.png p02.png p03.png/333/444/');
 /* result:
  { id: '123',
   key: [ '111', '222', '333', '444' ],
@@ -208,6 +208,7 @@ let result = regex.match('/user/123/bar/111fak/222foo/test/pictures-p01.png p02.
   multi: [ 'p01.png', 'p02.png', 'p03.png' ] } 
 */
 ```
+
 
 
 ... documentation in processed
