@@ -72,7 +72,7 @@ Regex.prototype.restructurePath = function (path="/") {
 		// console.log("string:",string);
 
 
-		const pattern = (pat?pat:"[^"+escape(this.options.splitters)+"]+");
+		const pattern = (pat?pat:"[^"+this.escape(this.options.splitters)+"]+");
 		const isMultiple = (quant==="*" || quant==="+")?true:false;
 		const isRequired = (quant!=="*" && quant!=="?")?true:false;
 		const quantifier = quant?quant:"";
@@ -84,22 +84,24 @@ Regex.prototype.restructurePath = function (path="/") {
 		
 		if( index > offset ){
 			const text = path.substring(offset,index);
-			const regstr = escape(text);
+			const regstr = this.escape(text);
 			this.regstr+=regstr;
 		}
 
 		count++;
 
-		if( !isRequired && isStarted ){
+		if( !isRequired && isStarted || isMultiple ){
 			this.regstr+="?";
 		}
 
 		const regstr = 
 			isMultiple?
 				isToken?
-				"((?:\\"+startChar+""+pattern+")"+quantifier+")":
-				"((?:"+pattern+")"+quantifier+")":
-			"("+pattern+")"+quantifier;
+					"((?:\\"+startChar+""+pattern+")"+quantifier+")":
+					"((?:"+pattern+"\\"+startChar+"?)"+quantifier+")":
+				isToken?
+					"("+pattern+")"+quantifier:
+					"("+pattern+")"+quantifier;
 		this.regstr+=regstr;
 
 		const data = {
@@ -120,7 +122,7 @@ Regex.prototype.restructurePath = function (path="/") {
 
 	if( offset < path.length-1 ){
 		const text = path.substring(offset);
-		const regstr = escape(text);
+		const regstr = this.escape(text);
 		this.regstr+=regstr;
 	}	
 
@@ -170,17 +172,18 @@ Regex.prototype.match = function(path) {
 		
 		// console.log("--------------");
 		// console.log(result[item.index]);
-		
+		if( data[item.key] )
+			isMultiple = true;
+
+
 		if( data[item.key] && !Array.isArray(data[item.key]) ){
 			isMultiple = true;
 			data[item.key] = [data[item.key]];
-			// console.log("key multiple 01");
 		}
-
+		
 		if( item.multiple && !data[item.key] ){
 			isMultiple = true;
 			data[item.key] = [];
-			// console.log("key multiple 02");
 		}
 
 		// console.log("key match 01", item.key, item.multiple, isMultiple);
@@ -190,7 +193,7 @@ Regex.prototype.match = function(path) {
 		}
 
 		// console.log("key match 02");
-		if( isMultiple && !item.multiple){
+		if( isMultiple && !item.multiple && result[item.index] ){
 			data[item.key].push(result[item.index]);
 			return;
 		}
