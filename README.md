@@ -19,7 +19,7 @@ npm install path-to-regex --save
 ```javascript
 var pathToRegex = require('path-to-regex');
 
-var matcher = new pathToRegex(path_template, options?);
+var parser = new pathToRegex(path_template, options?);
 ```
 
 - **path_template** A string or a regular expression.
@@ -77,6 +77,7 @@ let result = parser.match('user/');  // result: { path: 'user/' }
 let result = parser.match('/user/');  // result: { path: '/user/' }
 ```
 
+#### But it does not capture parts of the path that are clearly indicated.
 ```javascript
 let parser = new pathToRegex('/:path(.*)');
 // parser.regexp:  /^\/(.*)[\/]?$/
