@@ -1,6 +1,6 @@
 {
   "name": "path-to-regex",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Turn a path string such as /user/:id or /user/:id(\\d+) into a regular expression",
   "main": "index.js",
   "directories": {

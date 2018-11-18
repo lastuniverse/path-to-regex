@@ -166,7 +166,9 @@ Regex.prototype.match = function(path) {
 	const result = path.match(this.regexp);
 	if(!result) return;
 	// console.log("Regex.match 03", result);
-	
+	if(result.groups)
+		return result.groups;
+
 	const data = {};
 	this.keys.forEach(item=>{
 		let isMultiple = false;
@@ -207,6 +209,7 @@ Regex.prototype.match = function(path) {
 		
 
 	});
+
 	return data;
 
 };
