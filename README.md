@@ -278,6 +278,13 @@ let result = parser.match('/user/123/bar/111fak/222foo/test/pictures-p01.png p02
 ... documentation in processed
 
 
+## Participation in development
+```
+https://github.com/lastuniverse/path-to-regex/issues
+```
+## License
+
+MIT
 
 [![NPM](https://nodei.co/npm/path-to-regex.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/path-to-regex/)
 
