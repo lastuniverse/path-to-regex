@@ -25,11 +25,75 @@ var matcher = new pathToRegex(path_template, options?);
 - **path_template** A string or a regular expression.
 - **options**
   - **case** When `true` the regexp will be case sensitive. (default: `true`)
-  - **splitters** The chars list for splited patch string. (default: `'/'`)
+  - **separators** The chars list for splited patch string. (default: `'/'`)
   - **fromStart** When `true` the regexp will match from the beginning of the string. (default: `true`)
   - **toEnd** When `true` the regexp will match to the end of the string. (default: `true`)
 
+
+
+
+## How it works?
+It is important to understand how the key `:key` is interpreted depending on the pattern `:key(.*)` used and quantifiers `:key*`. The following examples will help you understand the logic for obtaining key values.
+
+
+#### the quantifier `*` will capture everything that is not a separator `options.separators`
+```javascript
+let parser = new pathToRegex(':path*');
+// parser.regexp:  /^((?:\[^\/]+)*)[\/]?$/
+
+let result = parser.match('user');  // result: undefined
+
+let result = parser.match('/user');  // result: undefined
+
+let result = parser.match('user/');  // result: undefined
+
+let result = parser.match('/user/');  // result: undefined
+```
+
+```javascript
+let parser = new pathToRegex('/:path*');
+// parser.regexp:  /^\/?((?:\/[^\/]+)*)[\/]?$/
+
+let result = parser.match('user');  // result: undefined
+
+let result = parser.match('/user');  // result: { path: [ 'user' ] }
+
+let result = parser.match('user/');  // result: undefined
+
+let result = parser.match('/user/');  // result: { path: [ 'user' ] }
+```
+
+#### Pattern `(...)`, in contrast quantifier, allows you to directly determine the valid key pattern. Such pattern `(.*)` will capture everything, including the splitter.
+```javascript
+let parser = new pathToRegex(':path(.*)');
+// parser.regexp:  /^(.*)[\/]?$/
+
+let result = parser.match('user');  // result: { path: 'user' }
+
+let result = parser.match('/user');  // result: { path: '/user' }
+
+let result = parser.match('user/');  // result: { path: 'user/' }
+
+let result = parser.match('/user/');  // result: { path: '/user/' }
+```
+
+```javascript
+let parser = new pathToRegex('/:path(.*)');
+// parser.regexp:  /^\/(.*)[\/]?$/
+
+let result = parser.match('user');  // result: undefined
+
+let result = parser.match('/user');  // result: { path: 'user' }
+
+let result = parser.match('user/');  // result: undefined
+
+let result = parser.match('/user/');  // result: { path: 'user/' }
+```
+
+
+
 ## Samples
+The following examples clearly demonstrate the use of keys, their pattern quantifiers.
 
 #### Demonstration of processing a simple key identifier `:keyname`
 ```javascript

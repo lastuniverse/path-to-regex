@@ -19,7 +19,7 @@ Regex.prototype.init = function(
 ) {
 	this.options = {
 		case: options.case||true,
-		splitters: options.splitters||"/",
+		separators: options.separators||"/",
 		fromStart: options.fromStart||true,
 		toEnd: options.toEnd||true		
 	}
@@ -72,13 +72,13 @@ Regex.prototype.restructurePath = function (path="/") {
 		// console.log("string:",string);
 
 
-		const pattern = (pat?pat:"[^"+this.escape(this.options.splitters)+"]+");
+		const pattern = (pat?pat:"[^"+this.escape(this.options.separators)+"]+");
 		const isMultiple = (quant==="*" || quant==="+")?true:false;
 		const isRequired = (quant!=="*" && quant!=="?")?true:false;
 		const quantifier = quant?quant:"";
 		const startChar = path.charAt(index-1);
-		const isStarted = this.splitter(startChar);
-		const isStoped = (index+str.length>=path.length)?true:this.splitter(path.charAt(index+str.length));
+		const isStarted = this.separator(startChar);
+		const isStoped = (index+str.length>=path.length)?true:this.separator(path.charAt(index+str.length));
 		const isToken = isStarted && isStoped;
 
 		
@@ -91,7 +91,8 @@ Regex.prototype.restructurePath = function (path="/") {
 		count++;
 
 		if( !isRequired && isStarted || isMultiple ){
-			this.regstr+="?";
+			if(index)
+				this.regstr+="?";
 		}
 
 		const regstr = 
@@ -129,7 +130,7 @@ Regex.prototype.restructurePath = function (path="/") {
  	this.regexp = new RegExp( 
 		(this.options.fromStart?"^":"")+
 		this.regstr+
-		"["+this.escape(this.options.splitters)+"]?"+
+		"["+this.escape(this.options.separators)+"]?"+
 		(this.options.toEnd?"$":"")
 		,
 		this.options.case?"":"i"
@@ -148,12 +149,12 @@ Regex.prototype.escape = function(text) {
 }
 
 /**
- * Метод проверяет является ли char одним из разделителей указанных в this.options.splitters
+ * Метод проверяет является ли char одним из разделителей указанных в this.options.separators
  * @param  {string} char Cтрока содержащая в себе проверяемый символ (длинна строки должна быть равна 1)
- * @return {boolean}     Если проверяемый символ является одним из символов указанных в this.options.splitters то true иначе false
+ * @return {boolean}     Если проверяемый символ является одним из символов указанных в this.options.separators то true иначе false
  */
-Regex.prototype.splitter = function(char) {
-	return !!(this.options.splitters.indexOf(char)+1);
+Regex.prototype.separator = function(char) {
+	return !!(this.options.separators.indexOf(char)+1);
 }
 
 
