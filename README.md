@@ -127,41 +127,54 @@ let result = parser.match('/foo');                          // result: { bar: un
 ```javascript
 let parser = new pathToRegex('/user/:id/bar/:key(\\d+):post?fak/:key(\d+)*:foo+/test/pictures-:multi(\w+?\.png)*/:key?');               // parser.r/]+?)?fak\/((?:[^\/]*\d+)*)((?:[^\/]*[^\/]+)+)\/test\/pictures-((?:[^\/]*\w+?\.png)*)\/?([^\/]+?)?[\/]?$/
 
-let result = parser.match('/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png,p02.png,p03.png/333');               // result: { id: '123',
-  key: [ '111', '222', '333' ],
-  post: 'qwerty',
-  foo: [ 'foo' ],
-  multi: [ 'p01.png', 'p02.png', 'p03.png' ] }
-let result = parser.match('/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png-p02.png-p03.png');           // result: { id: '123',
-  key: [ '111', '222' ],
-  post: 'qwerty',
-  foo: [ 'foo' ],
-  multi: [ 'p01.png', 'p02.png', 'p03.png' ] }
-let result = parser.match('/user/123/bar/111fak/222foo/test/pictures-p01.png,p02.png,p03.png');                 // result: { id: '123',
-  key: [ '111', '222' ],
-  post: undefined,
-  foo: [ 'foo' ],
-  multi: [ 'p01.png', 'p02.png', 'p03.png' ] }
-let result = parser.match('/user/123/bar/111fak/foo/test/pictures-p01.png;p02.png;p03.png');            // result: { id: '123',
-  key: [ '111' ],
-  post: undefined,
-  foo: [ 'foo' ],
-  multi: [ 'p01.png', 'p02.png', 'p03.png' ] }
-let result = parser.match('/user/123/bar/111fak/foo/test/pictures-p01.png p02.png');    // result: { id: '123',
-  key: [ '111' ],
-  post: undefined,
-  foo: [ 'foo' ],
-  multi: [ 'p01.png', 'p02.png' ] }
-let result = parser.match('/user/123/bar/111fak/foo/test/pictures-p01.png');            // result: { id: '123',
-  key: [ '111' ],
-  post: undefined,
-  foo: [ 'foo' ],
-  multi: [ 'p01.png' ] }
-let result = parser.match('/user/123/bar/111fak/foo/test/pictures-');                   // result: { id: '123',
-  key: [ '111' ],
-  post: undefined,
-  foo: [ 'foo' ],
-  multi: [] }
+let result = parser.match('/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png,p02.png,p03.png/333');
+/* result: { id: '123',
+   key: [ '111', '222', '333' ],
+   post: 'qwerty',
+   foo: [ 'foo' ],
+   multi: [ 'p01.png', 'p02.png', 'p03.png' ] } */
+
+let result = parser.match('/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png-p02.png-p03.png');
+/* result: { id: '123',
+   key: [ '111', '222' ],
+   post: 'qwerty',
+   foo: [ 'foo' ],
+   multi: [ 'p01.png', 'p02.png', 'p03.png' ] } */
+
+let result = parser.match('/user/123/bar/111fak/222foo/test/pictures-p01.png,p02.png,p03.png');
+/* result: { id: '123',
+   key: [ '111', '222' ],
+   post: undefined,
+   foo: [ 'foo' ],
+   multi: [ 'p01.png', 'p02.png', 'p03.png' ] } */
+
+let result = parser.match('/user/123/bar/111fak/foo/test/pictures-p01.png;p02.png;p03.png');
+/* result: { id: '123',
+   key: [ '111' ],
+   post: undefined,
+   foo: [ 'foo' ],
+   multi: [ 'p01.png', 'p02.png', 'p03.png' ] } */
+
+let result = parser.match('/user/123/bar/111fak/foo/test/pictures-p01.png p02.png');
+/* result: { id: '123',
+   key: [ '111' ],
+   post: undefined,
+   foo: [ 'foo' ],
+   multi: [ 'p01.png', 'p02.png' ] } */
+
+let result = parser.match('/user/123/bar/111fak/foo/test/pictures-p01.png');
+/* result: { id: '123',
+   key: [ '111' ],
+   post: undefined,
+   foo: [ 'foo' ],
+   multi: [ 'p01.png' ] } */
+
+let result = parser.match('/user/123/bar/111fak/foo/test/pictures-');
+/* result: { id: '123',
+   key: [ '111' ],
+   post: undefined,
+   foo: [ 'foo' ],
+   multi: [] } */
 ```
 
 
