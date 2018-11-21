@@ -1,5 +1,9 @@
 module.exports = Regex;
 
+if(window){
+	window.pathToRegex = Regex;
+}
+
 const escapeRe = /([$.+*?=!:[\]{}(|)/\\])/g;
 
 
