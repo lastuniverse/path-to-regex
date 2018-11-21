@@ -181,6 +181,8 @@ let result = parser.match('/user/123/bar/111fak/foo/test/pictures-');
 
 ... documentation in processed
 
+## Tests
+[Tests](http://jsfiddle.net/zb0vwqsd/)
 
 ## Participation in development
 ```
