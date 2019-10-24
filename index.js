@@ -6,6 +6,17 @@ if(window){
 
 const escapeRe = /([$.+*?=!:[\]{}(|)/\\])/g;
 
+/**
+ * defaultArg - shorthand polyfill for default argument value
+ * @param  {any} [obj]
+ * @param  {any} defaultValue
+ * @return {any}
+ */
+function defaultArg(obj, defaultValue) {
+  // condition borrowed from exists function of the functional.js lib
+  // https://github.com/functionaljs/functional-js/blob/master/functional.js#L289
+	return obj != null ? obj : defaultValue;
+}
 
 /**
  * Класс Regex [description].
@@ -37,12 +48,13 @@ Regex.prototype.init = function(
 };
 
 /**
- * Метод преобразует строку с шаблоном пути, включающим в себя строковое представление регулярных выражений 
+ * Метод преобразует строку с шаблоном пути, включающим в себя строковое представление регулярных выражений
  * и указадели на идентификаторы ключей в стиле Express.js в регулярное выражение
  * @param  {string} path Строка содержащая шаблон пути. Может содержать в себе регулярные выражения и объявление ключей типа :id. Поведение имитирует аналогичный функционал библиотеки Express.js v.5.x
  */
-Regex.prototype.restructureRegExp = function(regexp = /.*/) {
-	this.keys = [];
+Regex.prototype.restructureRegExp = function(regexp) {
+  regexp = defaultArg(regexp, /.*/);
+  this.keys = [];
 	this.path = undefined;
 	this.regstr = ("" + regexp);
 	this.regstr = this.regstr.substr(1, this.regstr.length - 2);
@@ -54,12 +66,13 @@ Regex.prototype.restructureRegExp = function(regexp = /.*/) {
 }
 
 /**
- * Метод преобразует строку с шаблоном пути, включающим в себя строковое представление регулярных выражений 
+ * Метод преобразует строку с шаблоном пути, включающим в себя строковое представление регулярных выражений
  * и указадели на идентификаторы ключей в стиле Express.js в регулярное выражение
  * @param  {string} path Строка содержащая шаблон пути. Может содержать в себе регулярные выражения и объявление ключей типа :id. Поведение имитирует аналогичный функционал библиотеки Express.js v.5.x
  */
-Regex.prototype.restructurePath = function(path = "/") {
-	this.keys = [];
+Regex.prototype.restructurePath = function(path) {
+  path = defaultArg(path, '/');
+  this.keys = [];
 	this.path = path;
 	this.regstr = "";
 
@@ -151,8 +164,8 @@ Regex.prototype.restructurePath = function(path = "/") {
 
 /**
  * Метод экранирует все спец символы указанные в глобальной для модуля, переменной escapeRe
- * @param  {string} text Любая строка 
- * @return {string}      Строка text, в которой все символы указанные в переменной escapeRe заэкранированы 
+ * @param  {string} text Любая строка
+ * @return {string}      Строка text, в которой все символы указанные в переменной escapeRe заэкранированы
  */
 Regex.prototype.escape = function(text) {
 	return text.replace(escapeRe, s => {
@@ -175,7 +188,7 @@ Regex.prototype.match = function(path) {
 // console.log("match 01");
 
 	if (typeof path !== "string") return;
-	
+
 // console.log("match 02");
 	const result = path.match(this.regexp);
 // console.log("match 03");
