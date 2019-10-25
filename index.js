@@ -7,15 +7,13 @@ if(window){
 const escapeRe = /([$.+*?=!:[\]{}(|)/\\])/g;
 
 /**
- * defaultArg - shorthand polyfill for default argument value
+ * defaultParam - simplistic polyfill for default function parament
  * @param  {any} [obj]
  * @param  {any} defaultValue
  * @return {any}
  */
-function defaultArg(obj, defaultValue) {
-  // condition borrowed from exists function of the functional.js lib
-  // https://github.com/functionaljs/functional-js/blob/master/functional.js#L289
-	return obj != null ? obj : defaultValue;
+function defaultParam(obj, defaultValue) {
+	return typeof obj !== 'undefined' ? obj : defaultValue;
 }
 
 /**
@@ -53,7 +51,7 @@ Regex.prototype.init = function(
  * @param  {string} path Строка содержащая шаблон пути. Может содержать в себе регулярные выражения и объявление ключей типа :id. Поведение имитирует аналогичный функционал библиотеки Express.js v.5.x
  */
 Regex.prototype.restructureRegExp = function(regexp) {
-  regexp = defaultArg(regexp, /.*/);
+  regexp = defaultParam(regexp, /.*/);
   this.keys = [];
 	this.path = undefined;
 	this.regstr = ("" + regexp);
@@ -71,7 +69,7 @@ Regex.prototype.restructureRegExp = function(regexp) {
  * @param  {string} path Строка содержащая шаблон пути. Может содержать в себе регулярные выражения и объявление ключей типа :id. Поведение имитирует аналогичный функционал библиотеки Express.js v.5.x
  */
 Regex.prototype.restructurePath = function(path) {
-  path = defaultArg(path, '/');
+  path = defaultParam(path, '/');
   this.keys = [];
 	this.path = path;
 	this.regstr = "";
