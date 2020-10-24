@@ -1,6 +1,6 @@
 module.exports = Regex;
 
-if(window){
+if (typeof window !== 'undefined') {
 	window.pathToRegex = Regex;
 }
 
