@@ -31,11 +31,11 @@ Regex.prototype.init = function(
 	options = {}
 ) {
 	this.options = {
-		case: options.case || true,
-		separators: options.separators || "/",
-		fromStart: options.fromStart || true,
-		toEnd: options.toEnd || true
-	}
+		case: typeof options.case === "boolean"? options.case : true,
+		separators: typeof options.separators === "string"? options.separators : "/",
+		fromStart: typeof options.fromStart === "boolean"? options.fromStart : true,
+		toEnd: typeof options.toEnd === "boolean"? options.toEnd : true
+	};
 	this.options.separator = "[" + this.escape(this.options.separators) + "]";
 
 	if (path instanceof RegExp) {
