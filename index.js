@@ -26,15 +26,15 @@ function Regex(path, options) {
 	return this;
 }
 
-Regex.prototype.init = function(
+Regex.prototype.init = function (
 	path = "/",
 	options = {}
 ) {
 	this.options = {
-		case: typeof options.case === "boolean"? options.case : true,
-		separators: typeof options.separators === "string"? options.separators : "/",
-		fromStart: typeof options.fromStart === "boolean"? options.fromStart : true,
-		toEnd: typeof options.toEnd === "boolean"? options.toEnd : true
+		case: typeof options.case === "boolean" ? options.case : true,
+		separators: typeof options.separators === "string" ? options.separators : "/",
+		fromStart: typeof options.fromStart === "boolean" ? options.fromStart : true,
+		toEnd: typeof options.toEnd === "boolean" ? options.toEnd : true
 	};
 	this.options.separator = "[" + this.escape(this.options.separators) + "]";
 
@@ -50,9 +50,9 @@ Regex.prototype.init = function(
  * и указадели на идентификаторы ключей в стиле Express.js в регулярное выражение
  * @param  {string} path Строка содержащая шаблон пути. Может содержать в себе регулярные выражения и объявление ключей типа :id. Поведение имитирует аналогичный функционал библиотеки Express.js v.5.x
  */
-Regex.prototype.restructureRegExp = function(regexp) {
-  regexp = defaultParam(regexp, /.*/);
-  this.keys = [];
+Regex.prototype.restructureRegExp = function (regexp) {
+	regexp = defaultParam(regexp, /.*/);
+	this.keys = [];
 	this.path = undefined;
 	this.regstr = ("" + regexp);
 	this.regstr = this.regstr.substr(1, this.regstr.length - 2);
@@ -68,9 +68,9 @@ Regex.prototype.restructureRegExp = function(regexp) {
  * и указадели на идентификаторы ключей в стиле Express.js в регулярное выражение
  * @param  {string} path Строка содержащая шаблон пути. Может содержать в себе регулярные выражения и объявление ключей типа :id. Поведение имитирует аналогичный функционал библиотеки Express.js v.5.x
  */
-Regex.prototype.restructurePath = function(path) {
-  path = defaultParam(path, '/');
-  this.keys = [];
+Regex.prototype.restructurePath = function (path) {
+	path = defaultParam(path, '/');
+	this.keys = [];
 	this.path = path;
 	this.regstr = "";
 
@@ -101,8 +101,8 @@ Regex.prototype.restructurePath = function(path) {
 		const quantifier = quant ? quant : "";
 
 		// const startChar = path.charAt(index-1);
-		const isStarted = (!index)?true:this.separator(path.charAt(index-1));
-		const isStoped = (index+str.length>=path.length)?true:this.separator(path.charAt(index+str.length));
+		const isStarted = (!index) ? true : this.separator(path.charAt(index - 1));
+		const isStoped = (index + str.length >= path.length) ? true : this.separator(path.charAt(index + str.length));
 		const isToken = isStarted && isStoped;
 
 		if (index > offset) {
@@ -111,17 +111,17 @@ Regex.prototype.restructurePath = function(path) {
 			this.regstr += regstr;
 		}
 
-		if( isToken && index && ( !isMultiple  || !isRequired) )
-			this.regstr+="?";
+		if (isToken && index && (!isMultiple || !isRequired))
+			this.regstr += "?";
 
 		const regstr =
 			isMultiple ?
-				isToken?
+				isToken ?
 					"((?:" + separator + "?" + pattern + ")" + quantifier + ")" :
 					"((?:" + notseparator + "*" + pattern + ")" + quantifier + ")" :
-				isToken?
-					"(" + pattern + "?)" + quantifier:
-					"(" + pattern + (pat?"":"?")+")" + quantifier;
+				isToken ?
+					"(" + pattern + "?)" + quantifier :
+					"(" + pattern + (pat ? "" : "?") + ")" + quantifier;
 
 		this.regstr += regstr;
 		//    /^[\/]?foo\/?((?:[\/]?.+)+)[\/]?$/
@@ -152,8 +152,12 @@ Regex.prototype.restructurePath = function(path) {
 		(this.options.fromStart ? "^" : "") +
 		separator + "?" +
 		this.regstr +
-		separator + "?" +
-		(this.options.toEnd ? "$" : ""),
+		(this.options.toEnd
+			?
+			separator + "?" + "$"
+			:
+			"(" + separator + "|" + separator + "?" + "$" + ")"
+		),
 		this.options.case ? "" : "i"
 	);
 }
@@ -165,7 +169,7 @@ Regex.prototype.restructurePath = function(path) {
  * @param  {string} text Любая строка
  * @return {string}      Строка text, в которой все символы указанные в переменной escapeRe заэкранированы
  */
-Regex.prototype.escape = function(text) {
+Regex.prototype.escape = function (text) {
 	return text.replace(escapeRe, s => {
 		return "\\" + s
 	});
@@ -176,27 +180,27 @@ Regex.prototype.escape = function(text) {
  * @param  {string} char Cтрока содержащая в себе проверяемый символ (длинна строки должна быть равна 1)
  * @return {boolean}     Если проверяемый символ является одним из символов указанных в this.options.separators то true иначе false
  */
-Regex.prototype.separator = function(char) {
+Regex.prototype.separator = function (char) {
 	return !!(this.options.separators.indexOf(char) + 1);
 }
 
 
 
-Regex.prototype.match = function(path) {
-// console.log("match 01");
+Regex.prototype.match = function (path) {
+	// console.log("match 01");
 
 	if (typeof path !== "string") return;
 
-// console.log("match 02");
+	// console.log("match 02");
 	const result = path.match(this.regexp);
-// console.log("match 03");
+	// console.log("match 03");
 
 	if (!result) return;
 
-// console.log("match 04");
+	// console.log("match 04");
 	const data = {};
 
-// console.log("match 05");
+	// console.log("match 05");
 	this.keys.forEach(item => {
 		// console.log("match foreach 01");
 		let isMultiple = false;
@@ -215,7 +219,7 @@ Regex.prototype.match = function(path) {
 			data[item.key] = [];
 		}
 
-		let value = result[item.index]?result[item.index]:undefined;
+		let value = result[item.index] ? result[item.index] : undefined;
 
 		if (!isMultiple && !item.multiple) {
 			data[item.key] = value;
@@ -229,12 +233,12 @@ Regex.prototype.match = function(path) {
 
 		if (result[item.index])
 			result[item.index].replace(item.regexp, str => {
-				if(str)	data[item.key].push(
-					str.replace(new RegExp(this.options.separator+"*$"), "")
+				if (str) data[item.key].push(
+					str.replace(new RegExp(this.options.separator + "*$"), "")
 				);
 			});
 
 	});
-// console.log("match 06");
+	// console.log("match 06");
 	return data;
 };

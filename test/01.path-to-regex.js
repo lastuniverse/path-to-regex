@@ -1,581 +1,754 @@
 const PathToRegex = require("../index.js");
 
 const chai = require('chai');
-const assert  = chai.assert;
-const expect  = chai.expect;
+const assert = chai.assert;
+const expect = chai.expect;
 // const should  = chai.should;
 
 
-describe("Тестируем модуль преобразования пути в RegExp", function() {
+describe("Тестируем модуль преобразования пути в RegExp", function () {
 
-  describe("01. Тестируем шаблон '/:path'", function() {
+  describe("01. Тестируем шаблон '/:path'", function () {
     const re = new PathToRegex("/:path");
-    console.log("01. REGEXP:",re.regexp);
-    it("шаблон не совпадает со строкой ''.             результат: `undefined`", function() {
-      assert.equal( re.match(""), undefined);
+    const reend = new PathToRegex("/:path", { case: false, toEnd: false });
+    console.log("01. REGEXP toEnd[true]:", re.regexp);
+    console.log("01. REGEXP toEnd[false]:", reend.regexp);
+
+    it("шаблон не совпадает со строкой ''.             результат: `undefined`", function () {
+      assert.equal(re.match(""), undefined);
+      assert.equal(reend.match(""), undefined);
     });
-    it("шаблон не совпадает со строкой '/'.            результат: `undefined`", function() {
-      assert.equal( re.match("/"), undefined);
+    it("шаблон не совпадает со строкой '/'.            результат: `undefined`", function () {
+      assert.equal(re.match("/"), undefined);
+      assert.equal(reend.match("/"), undefined);
     });
-    
-    it("шаблон совпадает со строкой 'user'.            результат: `{path:'user'}`", function() {
-      expect( re.match("user") ).to.deep.equal({path:'user'});
+    it("шаблон совпадает со строкой 'user'.            результат: `{path:'user'}`", function () {
+      expect(re.match("user")).to.deep.equal({ path: 'user' });
+      expect(reend.match("user")).to.deep.equal({ path: 'user' });
     });
-    it("шаблон совпадает со строкой '/user'.           результат: `{path:'user'}`", function() {
-      expect( re.match("/user") ).to.deep.equal({path:'user'});
-    });    
-    it("шаблон совпадает со строкой 'user/'.           результат: `{path:'user'}`", function() {
-      expect( re.match("user/") ).to.deep.equal({path:'user'});
+    it("шаблон совпадает со строкой '/user'.           результат: `{path:'user'}`", function () {
+      expect(re.match("/user")).to.deep.equal({ path: 'user' });
+      expect(reend.match("/user")).to.deep.equal({ path: 'user' });
     });
-    it("шаблон совпадает со строкой '/user/'.          результат: `{path:'user'}`", function() {
-      expect( re.match("/user/") ).to.deep.equal({path:'user'});
+    it("шаблон совпадает со строкой 'user/'.           результат: `{path:'user'}`", function () {
+      expect(re.match("user/")).to.deep.equal({ path: 'user' });
+      expect(reend.match("user/")).to.deep.equal({ path: 'user' });
     });
-    
-    it("шаблон не совпадает со строкой 'user/12345'.   результат: `undefined`", function() {
-      assert.equal( re.match("user/12345"), undefined);
+    it("шаблон совпадает со строкой '/user/'.          результат: `{path:'user'}`", function () {
+      expect(re.match("/user/")).to.deep.equal({ path: 'user' });
+      expect(reend.match("/user/")).to.deep.equal({ path: 'user' });
     });
-    it("шаблон не совпадает со строкой '/user/12345'.  результат: `undefined`", function() {
-      assert.equal( re.match("/user/12345"), undefined);
+    it("шаблон не совпадает со строкой 'user/12345'.   результат: `undefined`", function () {
+      assert.equal(re.match("user/12345"), undefined);
+      expect(reend.match("/user/12345")).to.deep.equal({ path: 'user' });
     });
-    it("шаблон не совпадает со строкой 'user/12345/'.  результат: `undefined`", function() {
-      assert.equal( re.match("user/12345/"), undefined);
+    it("шаблон не совпадает со строкой '/user/12345'.  результат: `undefined`", function () {
+      assert.equal(re.match("/user/12345"), undefined);
+      expect(reend.match("/user/12345")).to.deep.equal({ path: 'user' });
     });
-    it("шаблон не совпадает со строкой '/user/12345/'. результат: `undefined`", function() {
-      assert.equal( re.match("/user/12345/"), undefined);
+    it("шаблон не совпадает со строкой 'user/12345/'.  результат: `undefined`", function () {
+      assert.equal(re.match("user/12345/"), undefined);
+      expect(reend.match("/user/12345")).to.deep.equal({ path: 'user' });
+    });
+    it("шаблон не совпадает со строкой '/user/12345/'. результат: `undefined`", function () {
+      assert.equal(re.match("/user/12345/"), undefined);
+      expect(reend.match("/user/12345")).to.deep.equal({ path: 'user' });
     });
 
-  });  
+  });
 
-  describe("02. Тестируем шаблон '/:path*'", function() {
+  describe("02. Тестируем шаблон '/:path*'", function () {
     const re = new PathToRegex("/:path*");
-    console.log("02. REGEXP:",re.regexp);
-    it("шаблон совпадает со строкой ''.             результат: `{path:[]}`", function() {
-      expect( re.match("") ).to.deep.equal({path:[]});
+    const reend = new PathToRegex("/:path*", { case: false, toEnd: false });
+    console.log("02. REGEXP toEnd[true]:", re.regexp);
+    console.log("02. REGEXP toEnd[false]:", reend.regexp);
+    it("шаблон совпадает со строкой ''.             результат: `{path:[]}`", function () {
+      expect(re.match("")).to.deep.equal({ path: [] });
+      expect(reend.match("")).to.deep.equal({ path: [] });
     });
-    it("шаблон совпадает со строкой '/'.            результат: `{path:[]}`", function() {
-      expect( re.match("/") ).to.deep.equal({path:[]});
+    it("шаблон совпадает со строкой '/'.            результат: `{path:[]}`", function () {
+      expect(re.match("/")).to.deep.equal({ path: [] });
+      expect(reend.match("/")).to.deep.equal({ path: [] });
     });
-    
-    it("шаблон совпадает со строкой 'user'.         результат: `{path:['user']}`", function() {
-      expect( re.match("user") ).to.deep.equal({path:['user']});
+
+    it("шаблон совпадает со строкой 'user'.         результат: `{path:['user']}`", function () {
+      expect(re.match("user")).to.deep.equal({ path: ['user'] });
+      expect(reend.match("user")).to.deep.equal({ path: ['user'] });
     });
-    it("шаблон совпадает со строкой '/user'.        результат: `{path:['user']}`", function() {
-      expect( re.match("/user") ).to.deep.equal({path:['user']});
+    it("шаблон совпадает со строкой '/user'.        результат: `{path:['user']}`", function () {
+      expect(re.match("/user")).to.deep.equal({ path: ['user'] });
+      expect(reend.match("/user")).to.deep.equal({ path: ['user'] });
     });
-    it("шаблон совпадает со строкой 'user/'.        результат: `{path:['user']}`", function() {
-      expect( re.match("user/") ).to.deep.equal({path:['user']});
+    it("шаблон совпадает со строкой 'user/'.        результат: `{path:['user']}`", function () {
+      expect(re.match("user/")).to.deep.equal({ path: ['user'] });
+      expect(reend.match("user/")).to.deep.equal({ path: ['user'] });
     });
-    it("шаблон совпадает со строкой '/user/'.       результат: `{path:['user']}`", function() {
-      expect( re.match("/user/") ).to.deep.equal({path:['user']});
+    it("шаблон совпадает со строкой '/user/'.       результат: `{path:['user']}`", function () {
+      expect(re.match("/user/")).to.deep.equal({ path: ['user'] });
+      expect(reend.match("/user/")).to.deep.equal({ path: ['user'] });
     });
-    
-    it("шаблон совпадает со строкой 'user/12345'.   результат: `{path:['user','12345']}`", function() {
-      expect( re.match("user/12345") ).to.deep.equal({path:['user','12345']});
+
+    it("шаблон совпадает со строкой 'user/12345'.   результат: `{path:['user','12345']}`", function () {
+      expect(re.match("user/12345")).to.deep.equal({ path: ['user', '12345'] });
+      expect(reend.match("user/12345")).to.deep.equal({ path: ['user', '12345'] });
     });
-    it("шаблон совпадает со строкой '/user/12345'.  результат: `{path:['user','12345']}`", function() {
-      expect( re.match("/user/12345") ).to.deep.equal({path:['user','12345']});
+    it("шаблон совпадает со строкой '/user/12345'.  результат: `{path:['user','12345']}`", function () {
+      expect(re.match("/user/12345")).to.deep.equal({ path: ['user', '12345'] });
+      expect(reend.match("/user/12345")).to.deep.equal({ path: ['user', '12345'] });
     });
-    it("шаблон совпадает со строкой 'user/12345/'.  результат: `{path:['user','12345']}`", function() {
-      expect( re.match("user/12345/") ).to.deep.equal({path:['user','12345']});
-    });    
-    it("шаблон совпадает со строкой '/user/12345/'. результат: `{path:['user','12345']}`", function() {
-      expect( re.match("/user/12345/") ).to.deep.equal({path:['user','12345']});
+    it("шаблон совпадает со строкой 'user/12345/'.  результат: `{path:['user','12345']}`", function () {
+      expect(re.match("user/12345/")).to.deep.equal({ path: ['user', '12345'] });
+      expect(reend.match("user/12345/")).to.deep.equal({ path: ['user', '12345'] });
+    });
+    it("шаблон совпадает со строкой '/user/12345/'. результат: `{path:['user','12345']}`", function () {
+      expect(re.match("/user/12345/")).to.deep.equal({ path: ['user', '12345'] });
+      expect(reend.match("/user/12345/")).to.deep.equal({ path: ['user', '12345'] });
     });
   });
 
-  describe("03. Тестируем шаблон '/:path+'", function() {
+  describe("03. Тестируем шаблон '/:path+'", function () {
     const re = new PathToRegex("/:path+");
-    console.log("03. REGEXP:",re.regexp);
-    it("шаблон не совпадает со строкой ''.          результат: `undefined`", function() {
-      assert.equal( re.match(""), undefined);
+    const reend = new PathToRegex("/:path+", { case: false, toEnd: false });
+    console.log("03. REGEXP toEnd[true]:", re.regexp);
+    console.log("03. REGEXP toEnd[false]:", reend.regexp);
+    it("шаблон не совпадает со строкой ''.          результат: `undefined`", function () {
+      assert.equal(re.match(""), undefined);
+      assert.equal(reend.match(""), undefined);
     });
-    it("шаблон не совпадает со строкой '/'.         результат: `undefined`", function() {
-      assert.equal( re.match("/"), undefined);
+    it("шаблон не совпадает со строкой '/'.         результат: `undefined`", function () {
+      assert.equal(re.match("/"), undefined);
+      assert.equal(reend.match("/"), undefined);
     });
+    it("шаблон совпадает со строкой 'user'.         результат: `{path:['user']}`", function () {
+      expect(re.match("user")).to.deep.equal({ path: ['user'] });
+      expect(reend.match("user")).to.deep.equal({ path: ['user'] });
+    });
+    it("шаблон совпадает со строкой '/user'.        результат: `{path:['user']}`", function () {
+      expect(re.match("/user")).to.deep.equal({ path: ['user'] });
+      expect(reend.match("/user")).to.deep.equal({ path: ['user'] });
+    });
+    it("шаблон совпадает со строкой 'user/'.        результат: `{path:['user']}`", function () {
+      expect(re.match("user/")).to.deep.equal({ path: ['user'] });
+      expect(reend.match("user/")).to.deep.equal({ path: ['user'] });
+    });
+    it("шаблон совпадает со строкой '/user/'.       результат: `{path:['user'}`", function () {
+      expect(re.match("/user/")).to.deep.equal({ path: ['user'] });
+      expect(reend.match("/user/")).to.deep.equal({ path: ['user'] });
+    });
+    it("шаблон совпадает со строкой 'user/12345'.   результат: `{path:['user','12345']}`", function () {
+      expect(re.match("user/12345")).to.deep.equal({ path: ['user', '12345'] });
+      expect(reend.match("user/12345")).to.deep.equal({ path: ['user', '12345'] });
+    });
+    it("шаблон совпадает со строкой '/user/12345'.  результат: `{path:['user','12345']}`", function () {
+      expect(re.match("/user/12345")).to.deep.equal({ path: ['user', '12345'] });
+      expect(reend.match("/user/12345")).to.deep.equal({ path: ['user', '12345'] });
+    });
+    it("шаблон совпадает со строкой 'user/12345/'.  результат: `{path:['user','12345']}`", function () {
+      expect(re.match("user/12345/")).to.deep.equal({ path: ['user', '12345'] });
+      expect(reend.match("user/12345/")).to.deep.equal({ path: ['user', '12345'] });
+    });
+    it("шаблон совпадает со строкой '/user/12345/'. результат: `{path:['user','12345']}`", function () {
+      expect(re.match("/user/12345/")).to.deep.equal({ path: ['user', '12345'] });
+      expect(reend.match("/user/12345/")).to.deep.equal({ path: ['user', '12345'] });
+    });
+  });
 
-    it("шаблон совпадает со строкой 'user'.         результат: `{path:['user']}`", function() {
-      expect( re.match("user") ).to.deep.equal({path:['user']});
-    });
-    it("шаблон совпадает со строкой '/user'.        результат: `{path:['user']}`", function() {
-      expect( re.match("/user") ).to.deep.equal({path:['user']});
-    });
-    it("шаблон совпадает со строкой 'user/'.        результат: `{path:['user']}`", function() {
-      expect( re.match("user/") ).to.deep.equal({path:['user']});
-    });
-    it("шаблон совпадает со строкой '/user/'.       результат: `{path:['user'}`", function() {
-      expect( re.match("/user/") ).to.deep.equal({path:['user']});
-    });
-    
-    it("шаблон совпадает со строкой 'user/12345'.   результат: `{path:['user','12345']}`", function() {
-      expect( re.match("user/12345") ).to.deep.equal({path:['user','12345']});
-    });
-    it("шаблон совпадает со строкой '/user/12345'.  результат: `{path:['user','12345']}`", function() {
-      expect( re.match("/user/12345") ).to.deep.equal({path:['user','12345']});
-    });
-    it("шаблон совпадает со строкой 'user/12345/'.  результат: `{path:['user','12345']}`", function() {
-      expect( re.match("user/12345/") ).to.deep.equal({path:['user','12345']});
-    });
-    it("шаблон совпадает со строкой '/user/12345/'. результат: `{path:['user','12345']}`", function() {
-      expect( re.match("/user/12345/") ).to.deep.equal({path:['user','12345']});
-    });
-  });  
-
-  describe("04. Тестируем шаблон '/:path(.*)'", function() {
+  describe("04. Тестируем шаблон '/:path(.*)'", function () {
     const re = new PathToRegex("/:path(.*)");
-    console.log("04. REGEXP:",re.regexp);
-    it("шаблон совпадает со строкой ''.             результат: `{path: undefined}`", function() {
-      expect( re.match("") ).to.deep.equal({path:undefined});
+    const reend = new PathToRegex("/:path(.*)", { case: false, toEnd: false });
+    console.log("04. REGEXP toEnd[true]:", re.regexp);
+    console.log("04. REGEXP toEnd[false]:", reend.regexp);
+    it("шаблон совпадает со строкой ''.             результат: `{path: undefined}`", function () {
+      expect(re.match("")).to.deep.equal({ path: undefined });
+      expect(reend.match("")).to.deep.equal({ path: undefined });
     });
-    it("шаблон совпадает со строкой '/'.            результат: `{path: undefined}`", function() {
-      expect( re.match("/") ).to.deep.equal({path:undefined});
-    });
-
-    it("шаблон совпадает со строкой 'user'.         результат: `{path:'user'}`", function() {
-      expect( re.match("user") ).to.deep.equal({path:'user'});
-    });
-    it("шаблон совпадает со строкой '/user'.        результат: `{path:'user'}`", function() {
-      expect( re.match("/user") ).to.deep.equal({path:'user'});
-    });
-    it("шаблон совпадает со строкой 'user/'.        результат: `{path:'user'}`", function() {
-      expect( re.match("user/") ).to.deep.equal({path:'user'});
-    });
-    it("шаблон совпадает со строкой '/user/'.       результат: `{path:'user'}`", function() {
-      expect( re.match("/user/") ).to.deep.equal({path:'user'});
+    it("шаблон совпадает со строкой '/'.            результат: `{path: undefined}`", function () {
+      expect(re.match("/")).to.deep.equal({ path: undefined });
+      expect(reend.match("/")).to.deep.equal({ path: undefined });
     });
 
-    it("шаблон совпадает со строкой 'user/12345'.   результат: `{path:'user/12345'}`", function() {
-      expect( re.match("user/12345") ).to.deep.equal({path:'user/12345'});
+    it("шаблон совпадает со строкой 'user'.         результат: `{path:'user'}`", function () {
+      expect(re.match("user")).to.deep.equal({ path: 'user' });
+      expect(reend.match("user")).to.deep.equal({ path: 'user' });
     });
-    it("шаблон совпадает со строкой '/user/12345'.  результат: `{path:'user/12345'}`", function() {
-      expect( re.match("/user/12345") ).to.deep.equal({path:'user/12345'});
+    it("шаблон совпадает со строкой '/user'.        результат: `{path:'user'}`", function () {
+      expect(re.match("/user")).to.deep.equal({ path: 'user' });
+      expect(reend.match("/user")).to.deep.equal({ path: 'user' });
     });
-    it("шаблон совпадает со строкой 'user/12345/'.  результат: `{path:'user/12345'}`", function() {
-      expect( re.match("user/12345/") ).to.deep.equal({path:'user/12345'});
+    it("шаблон совпадает со строкой 'user/'.        результат: `{path:'user'}`", function () {
+      expect(re.match("user/")).to.deep.equal({ path: 'user' });
+      expect(reend.match("user/")).to.deep.equal({ path: 'user' });
     });
-    it("шаблон совпадает со строкой '/user/12345/'. результат: `{path:'user/12345'}`", function() {
-      expect( re.match("/user/12345/") ).to.deep.equal({path:'user/12345'});
+    it("шаблон совпадает со строкой '/user/'.       результат: `{path:'user'}`", function () {
+      expect(re.match("/user/")).to.deep.equal({ path: 'user' });
+      expect(reend.match("/user/")).to.deep.equal({ path: 'user' });
     });
-  }); 
 
-  describe("05. Тестируем шаблон ':path'", function() {
+    it("шаблон совпадает со строкой 'user/12345'.   результат: `{path:'user/12345'}`", function () {
+      expect(re.match("user/12345")).to.deep.equal({ path: 'user/12345' });
+      expect(reend.match("user/12345")).to.deep.equal({ path: 'user' });
+    });
+    it("шаблон совпадает со строкой '/user/12345'.  результат: `{path:'user/12345'}`", function () {
+      expect(re.match("/user/12345")).to.deep.equal({ path: 'user/12345' });
+      expect(reend.match("/user/12345")).to.deep.equal({ path: 'user' });
+    });
+    it("шаблон совпадает со строкой 'user/12345/'.  результат: `{path:'user/12345'}`", function () {
+      expect(re.match("user/12345/")).to.deep.equal({ path: 'user/12345' });
+      expect(reend.match("user/12345/")).to.deep.equal({ path: 'user' });
+    });
+    it("шаблон совпадает со строкой '/user/12345/'. результат: `{path:'user/12345'}`", function () {
+      expect(re.match("/user/12345/")).to.deep.equal({ path: 'user/12345' });
+      expect(reend.match("/user/12345/")).to.deep.equal({ path: 'user' });
+    });
+  });
+
+  describe("05. Тестируем шаблон ':path'", function () {
     const re = new PathToRegex(":path");
-    console.log("05. REGEXP:",re.regexp);
-    it("шаблон не совпадает со строкой ''.             результат: `undefined`", function() {
-      assert.equal( re.match(""), undefined);
+    const reend = new PathToRegex(":path", { case: false, toEnd: false });
+    console.log("05. REGEXP toEnd[true]:", re.regexp);
+    console.log("05. REGEXP toEnd[false]:", reend.regexp);
+    it("шаблон не совпадает со строкой ''.             результат: `undefined`", function () {
+      assert.equal(re.match(""), undefined);
+      assert.equal(reend.match(""), undefined);
     });
-    it("шаблон не совпадает со строкой '/'.            результат: `undefined`", function() {
-      assert.equal( re.match("/"), undefined);
-    });
-
-    it("шаблон совпадает со строкой 'user'.            результат: `{path:'user'}`", function() {
-      expect( re.match("user") ).to.deep.equal({path:'user'});
-    });
-    it("шаблон совпадает со строкой '/user'.           результат: `{path:'user'}`", function() {
-      expect( re.match("/user") ).to.deep.equal({path:'user'});
-    });
-    it("шаблон совпадает со строкой 'user/'.           результат: `{path:'user'}`", function() {
-      expect( re.match("user/") ).to.deep.equal({path:'user'});
-    });
-    it("шаблон совпадает со строкой '/user/'.          результат: `{path:'user'}`", function() {
-      expect( re.match("/user/") ).to.deep.equal({path:'user'});
+    it("шаблон не совпадает со строкой '/'.            результат: `undefined`", function () {
+      assert.equal(re.match("/"), undefined);
+      assert.equal(reend.match("/"), undefined);
     });
 
-    it("шаблон не совпадает со строкой 'user/12345'.   результат: `undefined`", function() {
-      assert.equal( re.match("user/12345"), undefined);
+    it("шаблон совпадает со строкой 'user'.            результат: `{path:'user'}`", function () {
+      expect(re.match("user")).to.deep.equal({ path: 'user' });
+      expect(reend.match("user")).to.deep.equal({ path: 'user' });
     });
-    it("шаблон не совпадает со строкой '/user/12345'.  результат: `undefined`", function() {
-      assert.equal( re.match("/user/12345"), undefined);
+    it("шаблон совпадает со строкой '/user'.           результат: `{path:'user'}`", function () {
+      expect(re.match("/user")).to.deep.equal({ path: 'user' });
+      expect(reend.match("/user")).to.deep.equal({ path: 'user' });
     });
-    it("шаблон не совпадает со строкой 'user/12345/'.  результат: `undefined`", function() {
-      assert.equal( re.match("user/12345/"), undefined);
+    it("шаблон совпадает со строкой 'user/'.           результат: `{path:'user'}`", function () {
+      expect(re.match("user/")).to.deep.equal({ path: 'user' });
+      expect(reend.match("user/")).to.deep.equal({ path: 'user' });
     });
-    it("шаблон не совпадает со строкой '/user/12345/'. результат: `undefined`", function() {
-      assert.equal( re.match("/user/12345/"), undefined);
+    it("шаблон совпадает со строкой '/user/'.          результат: `{path:'user'}`", function () {
+      expect(re.match("/user/")).to.deep.equal({ path: 'user' });
+      expect(reend.match("/user/")).to.deep.equal({ path: 'user' });
     });
-  });  
+
+    it("шаблон не совпадает со строкой 'user/12345'.   результат: `undefined`", function () {
+      assert.equal(re.match("user/12345"), undefined);
+      expect(reend.match("user/12345")).to.deep.equal({ path: 'user' });
+    });
+    it("шаблон не совпадает со строкой '/user/12345'.  результат: `undefined`", function () {
+      assert.equal(re.match("/user/12345"), undefined);
+      expect(reend.match("/user/12345")).to.deep.equal({ path: 'user' });
+    });
+    it("шаблон не совпадает со строкой 'user/12345/'.  результат: `undefined`", function () {
+      assert.equal(re.match("user/12345/"), undefined);
+      expect(reend.match("user/12345/")).to.deep.equal({ path: 'user' });
+    });
+    it("шаблон не совпадает со строкой '/user/12345/'. результат: `undefined`", function () {
+      assert.equal(re.match("/user/12345/"), undefined);
+      expect(reend.match("/user/12345/")).to.deep.equal({ path: 'user' });
+    });
+  });
 
 
-  describe("06. Тестируем шаблон ':path*'", function() {
+  describe("06. Тестируем шаблон ':path*'", function () {
     const re = new PathToRegex(":path*");
-    console.log("06. REGEXP:",re.regexp);
-    it("шаблон совпадает со строкой ''.             результат: `{path:[]}", function() {
-      expect( re.match("") ).to.deep.equal({path:[]});
+    const reend = new PathToRegex(":path*", { case: false, toEnd: false });
+    console.log("06. REGEXP toEnd[true]:", re.regexp);
+    console.log("06. REGEXP toEnd[false]:", reend.regexp);
+    it("шаблон совпадает со строкой ''.             результат: `{path:[]}", function () {
+      expect(re.match("")).to.deep.equal({ path: [] });
+      expect(reend.match("")).to.deep.equal({ path: [] });
     });
-    it("шаблон совпадает со строкой '/'.            результат: `{path:[]}", function() {
-      expect( re.match("/") ).to.deep.equal({path:[]});
-    });
-
-    it("шаблон совпадает со строкой 'user'.         результат: `{path:['user']}`", function() {
-      expect( re.match("user") ).to.deep.equal({path:['user']});
-    });
-    it("шаблон совпадает со строкой '/user'.        результат: `{path:['user']}`", function() {
-      expect( re.match("/user") ).to.deep.equal({path:['user']});
-    });
-    it("шаблон совпадает со строкой 'user/'.        результат: `{path:['user']}`", function() {
-      expect( re.match("user/") ).to.deep.equal({path:['user']});
-    });
-    it("шаблон совпадает со строкой '/user/'.       результат: `{path:['user']}`", function() {
-      expect( re.match("/user/") ).to.deep.equal({path:['user']});
+    it("шаблон совпадает со строкой '/'.            результат: `{path:[]}", function () {
+      expect(re.match("/")).to.deep.equal({ path: [] });
+      expect(reend.match("/")).to.deep.equal({ path: [] });
     });
 
-    it("шаблон совпадает со строкой 'user/12345'.   результат: `{path:['user','12345']}`", function() {
-      expect( re.match("user/12345") ).to.deep.equal({path:['user','12345']});
+    it("шаблон совпадает со строкой 'user'.         результат: `{path:['user']}`", function () {
+      expect(re.match("user")).to.deep.equal({ path: ['user'] });
+      expect(reend.match("user")).to.deep.equal({ path: ['user'] });
     });
-    it("шаблон совпадает со строкой '/user/12345'.  результат: `{path:['user','12345']}`", function() {
-      expect( re.match("/user/12345") ).to.deep.equal({path:['user','12345']});
+    it("шаблон совпадает со строкой '/user'.        результат: `{path:['user']}`", function () {
+      expect(re.match("/user")).to.deep.equal({ path: ['user'] });
+      expect(reend.match("/user")).to.deep.equal({ path: ['user'] });
     });
-    it("шаблон совпадает со строкой 'user/12345/'.  результат: `{path:['user','12345']}`", function() {
-      expect( re.match("user/12345/") ).to.deep.equal({path:['user','12345']});
+    it("шаблон совпадает со строкой 'user/'.        результат: `{path:['user']}`", function () {
+      expect(re.match("user/")).to.deep.equal({ path: ['user'] });
+      expect(reend.match("user/")).to.deep.equal({ path: ['user'] });
     });
-    it("шаблон совпадает со строкой '/user/12345/'. результат: `{path:['user','12345']}`", function() {
-      expect( re.match("/user/12345/") ).to.deep.equal({path:['user','12345']});
+    it("шаблон совпадает со строкой '/user/'.       результат: `{path:['user']}`", function () {
+      expect(re.match("/user/")).to.deep.equal({ path: ['user'] });
+      expect(reend.match("/user/")).to.deep.equal({ path: ['user'] });
+    });
+
+    it("шаблон совпадает со строкой 'user/12345'.   результат: `{path:['user','12345']}`", function () {
+      expect(re.match("user/12345")).to.deep.equal({ path: ['user', '12345'] });
+      expect(reend.match("user/12345")).to.deep.equal({ path: ['user', '12345'] });
+    });
+    it("шаблон совпадает со строкой '/user/12345'.  результат: `{path:['user','12345']}`", function () {
+      expect(re.match("/user/12345")).to.deep.equal({ path: ['user', '12345'] });
+      expect(reend.match("/user/12345")).to.deep.equal({ path: ['user', '12345'] });
+    });
+    it("шаблон совпадает со строкой 'user/12345/'.  результат: `{path:['user','12345']}`", function () {
+      expect(re.match("user/12345/")).to.deep.equal({ path: ['user', '12345'] });
+      expect(reend.match("user/12345/")).to.deep.equal({ path: ['user', '12345'] });
+    });
+    it("шаблон совпадает со строкой '/user/12345/'. результат: `{path:['user','12345']}`", function () {
+      expect(re.match("/user/12345/")).to.deep.equal({ path: ['user', '12345'] });
+      expect(reend.match("/user/12345/")).to.deep.equal({ path: ['user', '12345'] });
     });
   });
 
-  describe("07. Тестируем шаблон ':path+'", function() {
+  describe("07. Тестируем шаблон ':path+'", function () {
     const re = new PathToRegex(":path+");
-    console.log("07. REGEXP:",re.regexp);
-    it("шаблон не совпадает со строкой ''.          результат: `undefined`", function() {
-      assert.equal( re.match(""), undefined);
+    const reend = new PathToRegex(":path+", { case: false, toEnd: false });
+    console.log("07. REGEXP toEnd[true]:", re.regexp);
+    console.log("07. REGEXP toEnd[false]:", reend.regexp);
+    it("шаблон не совпадает со строкой ''.          результат: `undefined`", function () {
+      assert.equal(re.match(""), undefined);
+      assert.equal(reend.match(""), undefined);
     });
-    it("шаблон не совпадает со строкой '/'.         результат: `undefined`", function() {
-      assert.equal( re.match("/"), undefined);
-    });
-
-    it("шаблон совпадает со строкой 'user'.         результат: `{path:['user']}`", function() {
-      expect( re.match("user") ).to.deep.equal({path:['user']});
-    });
-    it("шаблон совпадает со строкой '/user'.        результат: `{path:['user']}`", function() {
-      expect( re.match("/user") ).to.deep.equal({path:['user']});
-    });
-    it("шаблон совпадает со строкой 'user/'.        результат: `{path:['user']}`", function() {
-      expect( re.match("user/") ).to.deep.equal({path:['user']});
-    });
-    it("шаблон совпадает со строкой '/user/'.       результат: `{path:['user']}`", function() {
-      expect( re.match("/user/") ).to.deep.equal({path:['user']});
+    it("шаблон не совпадает со строкой '/'.         результат: `undefined`", function () {
+      assert.equal(re.match("/"), undefined);
+      assert.equal(reend.match("/"), undefined);
     });
 
-    it("шаблон совпадает со строкой 'user/12345'.   результат: `{path:['user','12345']}`", function() {
-      expect( re.match("user/12345") ).to.deep.equal({path:['user','12345']});
+    it("шаблон совпадает со строкой 'user'.         результат: `{path:['user']}`", function () {
+      expect(re.match("user")).to.deep.equal({ path: ['user'] });
+      expect(reend.match("user")).to.deep.equal({ path: ['user'] });
     });
-    it("шаблон совпадает со строкой '/user/12345'.  результат: `{path:['user','12345']}`", function() {
-      expect( re.match("/user/12345") ).to.deep.equal({path:['user','12345']});
+    it("шаблон совпадает со строкой '/user'.        результат: `{path:['user']}`", function () {
+      expect(re.match("/user")).to.deep.equal({ path: ['user'] });
+      expect(reend.match("/user")).to.deep.equal({ path: ['user'] });
     });
-    it("шаблон совпадает со строкой 'user/12345/'.  результат: `{path:['user','12345']}`", function() {
-      expect( re.match("user/12345/") ).to.deep.equal({path:['user','12345']});
+    it("шаблон совпадает со строкой 'user/'.        результат: `{path:['user']}`", function () {
+      expect(re.match("user/")).to.deep.equal({ path: ['user'] });
+      expect(reend.match("user/")).to.deep.equal({ path: ['user'] });
     });
-    it("шаблон совпадает со строкой '/user/12345/'. результат: `{path:['user','12345']}`", function() {
-      expect( re.match("/user/12345/") ).to.deep.equal({path:['user','12345']});
+    it("шаблон совпадает со строкой '/user/'.       результат: `{path:['user']}`", function () {
+      expect(re.match("/user/")).to.deep.equal({ path: ['user'] });
+      expect(reend.match("/user/")).to.deep.equal({ path: ['user'] });
+    });
+
+    it("шаблон совпадает со строкой 'user/12345'.   результат: `{path:['user','12345']}`", function () {
+      expect(re.match("user/12345")).to.deep.equal({ path: ['user', '12345'] });
+      expect(reend.match("user/12345")).to.deep.equal({ path: ['user', '12345'] });
+    });
+    it("шаблон совпадает со строкой '/user/12345'.  результат: `{path:['user','12345']}`", function () {
+      expect(re.match("/user/12345")).to.deep.equal({ path: ['user', '12345'] });
+      expect(reend.match("/user/12345")).to.deep.equal({ path: ['user', '12345'] });
+    });
+    it("шаблон совпадает со строкой 'user/12345/'.  результат: `{path:['user','12345']}`", function () {
+      expect(re.match("user/12345/")).to.deep.equal({ path: ['user', '12345'] });
+      expect(reend.match("user/12345/")).to.deep.equal({ path: ['user', '12345'] });
+    });
+    it("шаблон совпадает со строкой '/user/12345/'. результат: `{path:['user','12345']}`", function () {
+      expect(re.match("/user/12345/")).to.deep.equal({ path: ['user', '12345'] });
+      expect(reend.match("/user/12345/")).to.deep.equal({ path: ['user', '12345'] });
     });
   });
 
-  describe("08. Тестируем шаблон ':path(.*)'", function() {
+  describe("08. Тестируем шаблон ':path(.*)'", function () {
     const re = new PathToRegex(":path(.*)");
-    console.log("08. REGEXP:",re.regexp);
-    it("шаблон совпадает со строкой '/'.            результат: `{path: undefined}`", function() {
-      expect( re.match("/") ).to.deep.equal({path:undefined});
+    const reend = new PathToRegex(":path(.*)", { case: false, toEnd: false });
+    console.log("08. REGEXP toEnd[true]:", re.regexp);
+    console.log("08. REGEXP toEnd[false]:", reend.regexp);
+    it("шаблон совпадает со строкой '/'.            результат: `{path: undefined}`", function () {
+      expect(re.match("/")).to.deep.equal({ path: undefined });
+      expect(reend.match("/")).to.deep.equal({ path: undefined });
     });
-    it("шаблон совпадает со строкой ''.             результат: `{path:undefined}`", function() {
-      expect( re.match("") ).to.deep.equal({path:undefined});
-    });
-
-    it("шаблон совпадает со строкой 'user'.         результат: `{path:'user'}`", function() {
-      expect( re.match("user") ).to.deep.equal({path:'user'});
-    });
-    it("шаблон совпадает со строкой '/user'.        результат: `{path:'user'}`", function() {
-      expect( re.match("/user") ).to.deep.equal({path:'user'});
-    });
-    it("шаблон совпадает со строкой 'user/'.        результат: `{path:'user'}`", function() {
-      expect( re.match("user/") ).to.deep.equal({path:'user'});
-    });
-    it("шаблон совпадает со строкой '/user/'.       результат: `{path:'user'}`", function() {
-      expect( re.match("/user/") ).to.deep.equal({path:'user'});
+    it("шаблон совпадает со строкой ''.             результат: `{path:undefined}`", function () {
+      expect(re.match("")).to.deep.equal({ path: undefined });
+      expect(reend.match("")).to.deep.equal({ path: undefined });
     });
 
-    it("шаблон совпадает со строкой 'user/12345'.   результат: `{path:'user/12345'}`", function() {
-      expect( re.match("user/12345") ).to.deep.equal({path:'user/12345'});
+    it("шаблон совпадает со строкой 'user'.         результат: `{path:'user'}`", function () {
+      expect(re.match("user")).to.deep.equal({ path: 'user' });
+      expect(reend.match("user")).to.deep.equal({ path: 'user' });
     });
-    it("шаблон совпадает со строкой '/user/12345'.  результат: `{path:'user/12345'}`", function() {
-      expect( re.match("/user/12345") ).to.deep.equal({path:'user/12345'});
+    it("шаблон совпадает со строкой '/user'.        результат: `{path:'user'}`", function () {
+      expect(re.match("/user")).to.deep.equal({ path: 'user' });
+      expect(reend.match("/user")).to.deep.equal({ path: 'user' });
     });
-    it("шаблон совпадает со строкой 'user/12345/'.  результат: `{path:'user/12345'}`", function() {
-      expect( re.match("user/12345/") ).to.deep.equal({path:'user/12345'});
+    it("шаблон совпадает со строкой 'user/'.        результат: `{path:'user'}`", function () {
+      expect(re.match("user/")).to.deep.equal({ path: 'user' });
+      expect(reend.match("user/")).to.deep.equal({ path: 'user' });
     });
-    it("шаблон совпадает со строкой '/user/12345/'. результат: `{path:'user/12345'}`", function() {
-      expect( re.match("/user/12345/") ).to.deep.equal({path:'user/12345'});
+    it("шаблон совпадает со строкой '/user/'.       результат: `{path:'user'}`", function () {
+      expect(re.match("/user/")).to.deep.equal({ path: 'user' });
+      expect(reend.match("/user/")).to.deep.equal({ path: 'user' });
+    });
+
+    it("шаблон совпадает со строкой 'user/12345'.   результат: `{path:'user/12345'}`", function () {
+      expect(re.match("user/12345")).to.deep.equal({ path: 'user/12345' });
+      expect(reend.match("user/12345")).to.deep.equal({ path: 'user' });
+    });
+    it("шаблон совпадает со строкой '/user/12345'.  результат: `{path:'user/12345'}`", function () {
+      expect(re.match("/user/12345")).to.deep.equal({ path: 'user/12345' });
+      expect(reend.match("/user/12345")).to.deep.equal({ path: 'user' });
+    });
+    it("шаблон совпадает со строкой 'user/12345/'.  результат: `{path:'user/12345'}`", function () {
+      expect(re.match("user/12345/")).to.deep.equal({ path: 'user/12345' });
+      expect(reend.match("user/12345/")).to.deep.equal({ path: 'user' });
+    });
+    it("шаблон совпадает со строкой '/user/12345/'. результат: `{path:'user/12345'}`", function () {
+      expect(re.match("/user/12345/")).to.deep.equal({ path: 'user/12345' });
+      expect(reend.match("/user/12345/")).to.deep.equal({ path: 'user' });
     });
   });
 
 
-  describe("09. Тестируем шаблон '/foo/:bar'", function() {
+  describe("09. Тестируем шаблон '/foo/:bar'", function () {
     const re = new PathToRegex("/foo/:bar");
-    console.log("09. REGEXP:",re.regexp);
-    it("шаблон не совпадает со строкой ''.               результат: `undefined`", function() {
-      assert.equal( re.match(""), undefined);
+    const reend = new PathToRegex("/foo/:bar", { case: false, toEnd: false });
+    console.log("09. REGEXP toEnd[true]:", re.regexp);
+    console.log("09. REGEXP toEnd[false]:", reend.regexp);
+    it("шаблон не совпадает со строкой ''.               результат: `undefined`", function () {
+      assert.equal(re.match(""), undefined);
+      assert.equal(reend.match(""), undefined);
     });
-    it("шаблон не совпадает со строкой '/'.              результат: `undefined`", function() {
-      assert.equal( re.match("/"), undefined);
-    });
-
-    it("шаблон не совпадает со строкой 'foo'.            результат: `undefined`", function() {
-      assert.equal( re.match("foo"), undefined);
-    });   
-    it("шаблон не совпадает со строкой '/foo'.           результат: `undefined`", function() {
-      assert.equal( re.match("/foo"), undefined);
-    });   
-    it("шаблон не совпадает со строкой 'foo/'.           результат: `undefined`", function() {
-      assert.equal( re.match("foo/"), undefined);
-    });   
-    it("шаблон не совпадает со строкой '/foo/'.          результат: `undefined`", function() {
-      assert.equal( re.match("/foo/"), undefined);
-    });   
-
-
-    it("шаблон совпадает со строкой 'foo/bar'.           результат: `{bar:'bar'}`", function() {
-      expect( re.match("foo/bar") ).to.deep.equal({bar:'bar'});
-    });
-    it("шаблон совпадает со строкой '/foo/bar'.          результат: `{bar:'bar'}`", function() {
-      expect( re.match("/foo/bar") ).to.deep.equal({bar:'bar'});
-    });
-    it("шаблон совпадает со строкой 'foo/bar/'.          результат: `{bar:'bar'}`", function() {
-      expect( re.match("foo/bar/") ).to.deep.equal({bar:'bar'});
-    });
-    it("шаблон совпадает со строкой '/foo/bar/'.         результат: `{bar:'bar'}`", function() {
-      expect( re.match("/foo/bar/") ).to.deep.equal({bar:'bar'});
+    it("шаблон не совпадает со строкой '/'.              результат: `undefined`", function () {
+      assert.equal(re.match("/"), undefined);
+      assert.equal(reend.match("/"), undefined);
     });
 
-    it("шаблон не совпадает со строкой 'foo/bar/baz'.    результат: `undefined`", function() {
-      assert.equal( re.match("foo/bar/baz"), undefined);
-    });   
-    it("шаблон не совпадает со строкой '/foo/bar/baz'.   результат: `undefined`", function() {
-      assert.equal( re.match("/foo/bar/baz"), undefined);
-    });   
-    it("шаблон не совпадает со строкой 'foo/bar/baz/'.   результат: `undefined`", function() {
-      assert.equal( re.match("foo/bar/baz/"), undefined);
-    });   
-    it("шаблон не совпадает со строкой '/foo/bar/baz/'.  результат: `undefined`", function() {
-      assert.equal( re.match("/foo/bar/baz/"), undefined);
+    it("шаблон не совпадает со строкой 'foo'.            результат: `undefined`", function () {
+      assert.equal(re.match("foo"), undefined);
+      assert.equal(reend.match("foo"), undefined);
+    });
+    it("шаблон не совпадает со строкой '/foo'.           результат: `undefined`", function () {
+      assert.equal(re.match("/foo"), undefined);
+      assert.equal(reend.match("/foo"), undefined);
+    });
+    it("шаблон не совпадает со строкой 'foo/'.           результат: `undefined`", function () {
+      assert.equal(re.match("foo/"), undefined);
+      assert.equal(reend.match("foo/"), undefined);
+    });
+    it("шаблон не совпадает со строкой '/foo/'.          результат: `undefined`", function () {
+      assert.equal(re.match("/foo/"), undefined);
+      assert.equal(reend.match("/foo/"), undefined);
+    });
+
+
+    it("шаблон совпадает со строкой 'foo/bar'.           результат: `{bar:'bar'}`", function () {
+      expect(re.match("foo/bar")).to.deep.equal({ bar: 'bar' });
+      expect(reend.match("foo/bar")).to.deep.equal({ bar: 'bar' });
+    });
+    it("шаблон совпадает со строкой '/foo/bar'.          результат: `{bar:'bar'}`", function () {
+      expect(re.match("/foo/bar")).to.deep.equal({ bar: 'bar' });
+      expect(reend.match("/foo/bar")).to.deep.equal({ bar: 'bar' });
+    });
+    it("шаблон совпадает со строкой 'foo/bar/'.          результат: `{bar:'bar'}`", function () {
+      expect(re.match("foo/bar/")).to.deep.equal({ bar: 'bar' });
+      expect(reend.match("foo/bar/")).to.deep.equal({ bar: 'bar' });
+    });
+    it("шаблон совпадает со строкой '/foo/bar/'.         результат: `{bar:'bar'}`", function () {
+      expect(re.match("/foo/bar/")).to.deep.equal({ bar: 'bar' });
+      expect(reend.match("/foo/bar/")).to.deep.equal({ bar: 'bar' });
+    });
+
+    it("шаблон не совпадает со строкой 'foo/bar/baz'.    результат: `undefined`", function () {
+      assert.equal(re.match("foo/bar/baz"), undefined);
+      expect(reend.match("foo/bar/baz")).to.deep.equal({ bar: 'bar' });
+    });
+    it("шаблон не совпадает со строкой '/foo/bar/baz'.   результат: `undefined`", function () {
+      assert.equal(re.match("/foo/bar/baz"), undefined);
+      expect(reend.match("/foo/bar/baz")).to.deep.equal({ bar: 'bar' });
+    });
+    it("шаблон не совпадает со строкой 'foo/bar/baz/'.   результат: `undefined`", function () {
+      assert.equal(re.match("foo/bar/baz/"), undefined);
+      expect(reend.match("foo/bar/baz/")).to.deep.equal({ bar: 'bar' });
+    });
+    it("шаблон не совпадает со строкой '/foo/bar/baz/'.  результат: `undefined`", function () {
+      assert.equal(re.match("/foo/bar/baz/"), undefined);
+      expect(reend.match("/foo/bar/baz/")).to.deep.equal({ bar: 'bar' });
     });
   });
 
 
-  describe("10. Тестируем шаблон '/foo/:bar?'", function() {
+  describe("10. Тестируем шаблон '/foo/:bar?'", function () {
     const re = new PathToRegex("/foo/:bar?");
-    console.log("10. REGEXP:",re.regexp);
-    it("шаблон совпадает со строкой ''.                   результат: `undefined`", function() {
-      assert.equal( re.match(""), undefined);
+    const reend = new PathToRegex("/foo/:bar?", { case: false, toEnd: false });
+    console.log("10. REGEXP toEnd[true]:", re.regexp);
+    console.log("10. REGEXP toEnd[false]:", reend.regexp);
+    it("шаблон совпадает со строкой ''.                   результат: `undefined`", function () {
+      assert.equal(re.match(""), undefined);
+      assert.equal(reend.match(""), undefined);
     });
-    it("шаблон совпадает со строкой '/'.                  результат: `undefined`", function() {
-      assert.equal( re.match("/"), undefined);
-    });
-
-    it("шаблон совпадает со строкой 'foo'.                результат: `{ bar: undefined }`", function() {
-      expect( re.match("foo") ).to.deep.equal({bar: undefined});
-    });   
-    it("шаблон совпадает со строкой '/foo'.               результат: `{ bar: undefined }`", function() {
-      expect( re.match("/foo") ).to.deep.equal({bar: undefined});
-    });   
-    it("шаблон совпадает со строкой 'foo/'.               результат: `{ bar: undefined }`", function() {
-      expect( re.match("foo/") ).to.deep.equal({bar: undefined});
-    });   
-    it("шаблон совпадает со строкой '/foo/'.              результат: `{ bar: undefined }`", function() {
-      expect( re.match("/foo/") ).to.deep.equal({bar: undefined});
-    });   
-
-    it("шаблон совпадает со строкой 'foo/bar'.            результат: `{bar:'bar'}`", function() {
-      expect( re.match("foo/bar") ).to.deep.equal({bar:'bar'});
-    });
-    it("шаблон совпадает со строкой '/foo/bar'.           результат: `{bar:'bar'}`", function() {
-      expect( re.match("/foo/bar") ).to.deep.equal({bar:'bar'});
-    });
-    it("шаблон совпадает со строкой 'foo/bar/'.           результат: `{bar:'bar'}`", function() {
-      expect( re.match("foo/bar/") ).to.deep.equal({bar:'bar'});
-    });
-    it("шаблон совпадает со строкой '/foo/bar/'.          результат: `{bar:'bar'}`", function() {
-      expect( re.match("/foo/bar/") ).to.deep.equal({bar:'bar'});
+    it("шаблон совпадает со строкой '/'.                  результат: `undefined`", function () {
+      assert.equal(re.match("/"), undefined);
+      assert.equal(reend.match("/"), undefined);
     });
 
-    it("шаблон не совпадает со строкой 'foo/bar/baz'.     результат: `undefined`", function() {
-      assert.equal( re.match("foo/bar/baz"), undefined);
-    });   
-    it("шаблон не совпадает со строкой '/foo/bar/baz'.    результат: `undefined`", function() {
-      assert.equal( re.match("/foo/bar/baz"), undefined);
-    });   
-    it("шаблон не совпадает со строкой 'foo/bar/baz/'.    результат: `undefined`", function() {
-      assert.equal( re.match("foo/bar/baz/"), undefined);
-    });   
-    it("шаблон не совпадает со строкой '/foo/bar/baz/'.   результат: `undefined`", function() {
-      assert.equal( re.match("/foo/bar/baz/"), undefined);
+    it("шаблон совпадает со строкой 'foo'.                результат: `{ bar: undefined }`", function () {
+      expect(re.match("foo")).to.deep.equal({ bar: undefined });
+      expect(reend.match("foo")).to.deep.equal({ bar: undefined });
+    });
+    it("шаблон совпадает со строкой '/foo'.               результат: `{ bar: undefined }`", function () {
+      expect(re.match("/foo")).to.deep.equal({ bar: undefined });
+      expect(reend.match("/foo")).to.deep.equal({ bar: undefined });
+    });
+    it("шаблон совпадает со строкой 'foo/'.               результат: `{ bar: undefined }`", function () {
+      expect(re.match("foo/")).to.deep.equal({ bar: undefined });
+      expect(reend.match("foo/")).to.deep.equal({ bar: undefined });
+    });
+    it("шаблон совпадает со строкой '/foo/'.              результат: `{ bar: undefined }`", function () {
+      expect(re.match("/foo/")).to.deep.equal({ bar: undefined });
+      expect(reend.match("/foo/")).to.deep.equal({ bar: undefined });
+    });
+
+    it("шаблон совпадает со строкой 'foo/bar'.            результат: `{bar:'bar'}`", function () {
+      expect(re.match("foo/bar")).to.deep.equal({ bar: 'bar' });
+      expect(reend.match("foo/bar")).to.deep.equal({ bar: 'bar' });
+    });
+    it("шаблон совпадает со строкой '/foo/bar'.           результат: `{bar:'bar'}`", function () {
+      expect(re.match("/foo/bar")).to.deep.equal({ bar: 'bar' });
+      expect(reend.match("/foo/bar")).to.deep.equal({ bar: 'bar' });
+    });
+    it("шаблон совпадает со строкой 'foo/bar/'.           результат: `{bar:'bar'}`", function () {
+      expect(re.match("foo/bar/")).to.deep.equal({ bar: 'bar' });
+      expect(reend.match("foo/bar/")).to.deep.equal({ bar: 'bar' });
+    });
+    it("шаблон совпадает со строкой '/foo/bar/'.          результат: `{bar:'bar'}`", function () {
+      expect(re.match("/foo/bar/")).to.deep.equal({ bar: 'bar' });
+      expect(reend.match("/foo/bar/")).to.deep.equal({ bar: 'bar' });
+    });
+
+    it("шаблон не совпадает со строкой 'foo/bar/baz'.     результат: `undefined`", function () {
+      assert.equal(re.match("foo/bar/baz"), undefined);
+      expect(reend.match("foo/bar/baz")).to.deep.equal({ bar: 'bar' });
+    });
+    it("шаблон не совпадает со строкой '/foo/bar/baz'.    результат: `undefined`", function () {
+      assert.equal(re.match("/foo/bar/baz"), undefined);
+      expect(reend.match("/foo/bar/baz")).to.deep.equal({ bar: 'bar' });
+    });
+    it("шаблон не совпадает со строкой 'foo/bar/baz/'.    результат: `undefined`", function () {
+      assert.equal(re.match("foo/bar/baz/"), undefined);
+      expect(reend.match("foo/bar/baz/")).to.deep.equal({ bar: 'bar' });
+    });
+    it("шаблон не совпадает со строкой '/foo/bar/baz/'.   результат: `undefined`", function () {
+      assert.equal(re.match("/foo/bar/baz/"), undefined);
+      expect(reend.match("/foo/bar/baz/")).to.deep.equal({ bar: 'bar' });
     });
   });
 
 
-  describe("11. Тестируем шаблон '/foo/:bar(.*)'", function() {
+  describe("11. Тестируем шаблон '/foo/:bar(.*)'", function () {
     const re = new PathToRegex("/foo/:bar(.*)");
-    console.log("11. REGEXP:",re.regexp);
-    it("шаблон не совпадает со строкой ''.             результат: `undefined`", function() {
-      assert.equal( re.match(""), undefined);
+    const reend = new PathToRegex("/foo/:bar(.*)", { case: false, toEnd: false });
+    console.log("11. REGEXP toEnd[true]:", re.regexp);
+    console.log("11. REGEXP toEnd[false]:", reend.regexp);
+    it("шаблон не совпадает со строкой ''.             результат: `undefined`", function () {
+      assert.equal(re.match(""), undefined);
+      assert.equal(reend.match(""), undefined);
     });
-    it("шаблон не совпадает со строкой '/'.            результат: `undefined`", function() {
-      assert.equal( re.match("/"), undefined);
-    });
-
-    it("шаблон совпадает со строкой 'foo'.             результат: `{ bar: undefined }`", function() {
-      expect( re.match("foo") ).to.deep.equal({bar: undefined});
-    });   
-    it("шаблон совпадает со строкой '/foo'.            результат: `{ bar: undefined }`", function() {
-      expect( re.match("/foo") ).to.deep.equal({bar: undefined});
-    });   
-    it("шаблон совпадает со строкой 'foo/'.            результат: `{ bar: undefined }`", function() {
-      expect( re.match("foo/") ).to.deep.equal({bar: undefined});
-    });   
-    it("шаблон совпадает со строкой '/foo/'.           результат: `{ bar: undefined }`", function() {
-      expect( re.match("/foo/") ).to.deep.equal({bar: undefined});
-    });   
-
-    it("шаблон совпадает со строкой 'foo/bar'.         результат: `{bar:'bar'}`", function() {
-      expect( re.match("foo/bar") ).to.deep.equal({bar:'bar'});
-    });
-    it("шаблон совпадает со строкой '/foo/bar'.        результат: `{bar:'bar'}`", function() {
-      expect( re.match("/foo/bar") ).to.deep.equal({bar:'bar'});
-    });
-    it("шаблон совпадает со строкой 'foo/bar/'.        результат: `{bar:'bar'}`", function() {
-      expect( re.match("foo/bar/") ).to.deep.equal({bar:'bar'});
-    });
-    it("шаблон совпадает со строкой '/foo/bar/'.       результат: `{bar:'bar'}`", function() {
-      expect( re.match("/foo/bar/") ).to.deep.equal({bar:'bar'});
+    it("шаблон не совпадает со строкой '/'.            результат: `undefined`", function () {
+      assert.equal(re.match("/"), undefined);
+      assert.equal(reend.match("/"), undefined);
     });
 
-    it("шаблон совпадает со строкой 'foo/bar/baz'.     результат: `{bar:['bar','baz']}`", function() {
-      expect( re.match("foo/bar/baz") ).to.deep.equal({ bar: 'bar/baz' });
-    });   
-    it("шаблон совпадает со строкой '/foo/bar/baz'.    результат: `{bar:['bar','baz']}`", function() {
-      expect( re.match("/foo/bar/baz") ).to.deep.equal({ bar: 'bar/baz' });
-    });   
-    it("шаблон совпадает со строкой 'foo/bar/baz/'.    результат: `{bar:['bar','baz']}`", function() {
-      expect( re.match("foo/bar/baz/") ).to.deep.equal({ bar: 'bar/baz' });
-    });   
-    it("шаблон совпадает со строкой '/foo/bar/baz/'.   результат: `{bar:['bar','baz']}`", function() {
-      expect( re.match("/foo/bar/baz/") ).to.deep.equal({ bar: 'bar/baz' });
+    it("шаблон совпадает со строкой 'foo'.             результат: `{ bar: undefined }`", function () {
+      expect(re.match("foo")).to.deep.equal({ bar: undefined });
+      expect(reend.match("foo")).to.deep.equal({ bar: undefined });
+    });
+    it("шаблон совпадает со строкой '/foo'.            результат: `{ bar: undefined }`", function () {
+      expect(re.match("/foo")).to.deep.equal({ bar: undefined });
+      expect(reend.match("/foo")).to.deep.equal({ bar: undefined });
+    });
+    it("шаблон совпадает со строкой 'foo/'.            результат: `{ bar: undefined }`", function () {
+      expect(re.match("foo/")).to.deep.equal({ bar: undefined });
+      expect(reend.match("foo/")).to.deep.equal({ bar: undefined });
+    });
+    it("шаблон совпадает со строкой '/foo/'.           результат: `{ bar: undefined }`", function () {
+      expect(re.match("/foo/")).to.deep.equal({ bar: undefined });
+      expect(reend.match("/foo/")).to.deep.equal({ bar: undefined });
+    });
+
+    it("шаблон совпадает со строкой 'foo/bar'.         результат: `{bar:'bar'}`", function () {
+      expect(re.match("foo/bar")).to.deep.equal({ bar: 'bar' });
+      expect(reend.match("foo/bar")).to.deep.equal({ bar: 'bar' });
+    });
+    it("шаблон совпадает со строкой '/foo/bar'.        результат: `{bar:'bar'}`", function () {
+      expect(re.match("/foo/bar")).to.deep.equal({ bar: 'bar' });
+      expect(reend.match("/foo/bar")).to.deep.equal({ bar: 'bar' });
+    });
+    it("шаблон совпадает со строкой 'foo/bar/'.        результат: `{bar:'bar'}`", function () {
+      expect(re.match("foo/bar/")).to.deep.equal({ bar: 'bar' });
+      expect(reend.match("foo/bar/")).to.deep.equal({ bar: 'bar' });
+    });
+    it("шаблон совпадает со строкой '/foo/bar/'.       результат: `{bar:'bar'}`", function () {
+      expect(re.match("/foo/bar/")).to.deep.equal({ bar: 'bar' });
+      expect(reend.match("/foo/bar")).to.deep.equal({ bar: 'bar' });
+    });
+
+    it("шаблон совпадает со строкой 'foo/bar/baz'.     результат: `{bar:['bar','baz']}`", function () {
+      expect(re.match("foo/bar/baz")).to.deep.equal({ bar: 'bar/baz' });
+      expect(reend.match("foo/bar/baz")).to.deep.equal({ bar: 'bar' });
+    });
+    it("шаблон совпадает со строкой '/foo/bar/baz'.    результат: `{bar:['bar','baz']}`", function () {
+      expect(re.match("/foo/bar/baz")).to.deep.equal({ bar: 'bar/baz' });
+      expect(reend.match("/foo/bar/baz")).to.deep.equal({ bar: 'bar' });
+    });
+    it("шаблон совпадает со строкой 'foo/bar/baz/'.    результат: `{bar:['bar','baz']}`", function () {
+      expect(re.match("foo/bar/baz/")).to.deep.equal({ bar: 'bar/baz' });
+      expect(reend.match("foo/bar/baz/")).to.deep.equal({ bar: 'bar' });
+    });
+    it("шаблон совпадает со строкой '/foo/bar/baz/'.   результат: `{bar:['bar','baz']}`", function () {
+      expect(re.match("/foo/bar/baz/")).to.deep.equal({ bar: 'bar/baz' });
+      expect(reend.match("/foo/bar/baz/")).to.deep.equal({ bar: 'bar' });
     });
   });
 
-  describe("12. Тестируем шаблон '/foo/:bar(.*)*'", function() {
+  describe("12. Тестируем шаблон '/foo/:bar(.*)*'", function () {
     const re = new PathToRegex("/foo/:bar(.*)*");
-    console.log("12. REGEXP:",re.regexp);
-    it("шаблон не совпадает со строкой ''.             результат: `undefined`", function() {
-      assert.equal( re.match(""), undefined);
+    const reend = new PathToRegex("/foo/:bar(.*)*", { case: false, toEnd: false });
+    console.log("12. REGEXP toEnd[true]:", re.regexp);
+    console.log("12. REGEXP toEnd[false]:", reend.regexp);
+    it("шаблон не совпадает со строкой ''.             результат: `undefined`", function () {
+      assert.equal(re.match(""), undefined);
+      assert.equal(reend.match(""), undefined);
     });
-    it("шаблон не совпадает со строкой '/'.            результат: `undefined`", function() {
-      assert.equal( re.match("/"), undefined);
-    });
-
-    it("шаблон совпадает со строкой 'foo'.             результат: `{ bar: [] }`", function() {
-      expect( re.match("foo") ).to.deep.equal({bar: []});
-    });   
-    it("шаблон совпадает со строкой '/foo'.            результат: `{ bar: [] }`", function() {
-      expect( re.match("/foo") ).to.deep.equal({bar: []});
-    });   
-    it("шаблон совпадает со строкой 'foo/'.            результат: `{ bar: [] }`", function() {
-      expect( re.match("foo/") ).to.deep.equal({bar: []});
-    });   
-    it("шаблон совпадает со строкой '/foo/'.           результат: `{ bar: [] }`", function() {
-      expect( re.match("/foo/") ).to.deep.equal({bar: []});
-    });   
-
-    it("шаблон совпадает со строкой 'foo/bar'.         результат: `{bar:['bar']}`", function() {
-      expect( re.match("foo/bar") ).to.deep.equal({bar:['bar']});
-    });
-    it("шаблон совпадает со строкой '/foo/bar'.        результат: `{bar:['bar']}`", function() {
-      expect( re.match("/foo/bar") ).to.deep.equal({bar:['bar']});
-    });
-    it("шаблон совпадает со строкой 'foo/bar/'.        результат: `{bar:['bar']}`", function() {
-      expect( re.match("foo/bar/") ).to.deep.equal({bar:['bar']});
-    });
-    it("шаблон совпадает со строкой '/foo/bar/'.       результат: `{bar:['bar']}`", function() {
-      expect( re.match("/foo/bar/") ).to.deep.equal({bar:['bar']});
+    it("шаблон не совпадает со строкой '/'.            результат: `undefined`", function () {
+      assert.equal(re.match("/"), undefined);
+      assert.equal(reend.match("/"), undefined);
     });
 
-    it("шаблон совпадает со строкой 'foo/bar/baz'.     результат: `{bar:['bar/baz']}`", function() {
-      expect( re.match("foo/bar/baz") ).to.deep.equal({ bar: ['bar/baz'] });
-    });   
-    it("шаблон совпадает со строкой '/foo/bar/baz'.    результат: `{bar:['bar/baz']}`", function() {
-      expect( re.match("/foo/bar/baz") ).to.deep.equal({ bar: ['bar/baz'] });
-    });   
-    it("шаблон совпадает со строкой 'foo/bar/baz/'.    результат: `{bar:['bar/baz']}`", function() {
-      expect( re.match("foo/bar/baz/") ).to.deep.equal({ bar: ['bar/baz'] });
-    });   
-    it("шаблон совпадает со строкой '/foo/bar/baz/'.   результат: `{bar:['bar/baz']}`", function() {
-      expect( re.match("/foo/bar/baz/") ).to.deep.equal({ bar: ['bar/baz'] });
+    it("шаблон совпадает со строкой 'foo'.             результат: `{ bar: [] }`", function () {
+      expect(re.match("foo")).to.deep.equal({ bar: [] });
+      expect(reend.match("foo")).to.deep.equal({ bar: [] });
+    });
+    it("шаблон совпадает со строкой '/foo'.            результат: `{ bar: [] }`", function () {
+      expect(re.match("/foo")).to.deep.equal({ bar: [] });
+      expect(reend.match("/foo")).to.deep.equal({ bar: [] });
+    });
+    it("шаблон совпадает со строкой 'foo/'.            результат: `{ bar: [] }`", function () {
+      expect(re.match("foo/")).to.deep.equal({ bar: [] });
+      expect(reend.match("foo/")).to.deep.equal({ bar: [] });
+    });
+    it("шаблон совпадает со строкой '/foo/'.           результат: `{ bar: [] }`", function () {
+      expect(re.match("/foo/")).to.deep.equal({ bar: [] });
+      expect(reend.match("/foo/")).to.deep.equal({ bar: [] });
+    });
+
+    it("шаблон совпадает со строкой 'foo/bar'.         результат: `{bar:['bar']}`", function () {
+      expect(re.match("foo/bar")).to.deep.equal({ bar: ['bar'] });
+      expect(reend.match("foo/bar")).to.deep.equal({ bar: ['bar'] });
+    });
+    it("шаблон совпадает со строкой '/foo/bar'.        результат: `{bar:['bar']}`", function () {
+      expect(re.match("/foo/bar")).to.deep.equal({ bar: ['bar'] });
+      expect(reend.match("/foo/bar")).to.deep.equal({ bar: ['bar'] });
+    });
+    it("шаблон совпадает со строкой 'foo/bar/'.        результат: `{bar:['bar']}`", function () {
+      expect(re.match("foo/bar/")).to.deep.equal({ bar: ['bar'] });
+      expect(reend.match("foo/bar/")).to.deep.equal({ bar: ['bar'] });
+    });
+    it("шаблон совпадает со строкой '/foo/bar/'.       результат: `{bar:['bar']}`", function () {
+      expect(re.match("/foo/bar/")).to.deep.equal({ bar: ['bar'] });
+      expect(reend.match("/foo/bar")).to.deep.equal({ bar: ['bar'] });
+    });
+
+    it("шаблон совпадает со строкой 'foo/bar/baz'.     результат: `{bar:['bar/baz']}`", function () {
+      expect(re.match("foo/bar/baz")).to.deep.equal({ bar: ['bar/baz'] });
+      expect(reend.match("foo/bar/baz")).to.deep.equal({ bar: ['bar/baz'] });
+    });
+    it("шаблон совпадает со строкой '/foo/bar/baz'.    результат: `{bar:['bar/baz']}`", function () {
+      expect(re.match("/foo/bar/baz")).to.deep.equal({ bar: ['bar/baz'] });
+      expect(reend.match("/foo/bar/baz")).to.deep.equal({ bar: ['bar/baz'] });
+    });
+    it("шаблон совпадает со строкой 'foo/bar/baz/'.    результат: `{bar:['bar/baz']}`", function () {
+      expect(re.match("foo/bar/baz/")).to.deep.equal({ bar: ['bar/baz'] });
+      expect(reend.match("foo/bar/baz/")).to.deep.equal({ bar: ['bar/baz'] });
+    });
+    it("шаблон совпадает со строкой '/foo/bar/baz/'.   результат: `{bar:['bar/baz']}`", function () {
+      expect(re.match("/foo/bar/baz/")).to.deep.equal({ bar: ['bar/baz'] });
+      expect(reend.match("/foo/bar/baz/")).to.deep.equal({ bar: ['bar/baz'] });
     });
   });
 
-  describe("13. Тестируем шаблон '/foo/:bar(.+)+'", function() {
+  describe("13. Тестируем шаблон '/foo/:bar(.+)+'", function () {
     const re = new PathToRegex("/foo/:bar(.+)+");
-    console.log("13. REGEXP:",re.regexp);
-    it("шаблон не совпадает со строкой ''.             результат: `undefined`", function() {
-      assert.equal( re.match(""), undefined);
+    const reend = new PathToRegex("/foo/:bar(.+)+", { case: false, toEnd: false });
+    console.log("13. REGEXP toEnd[true]:", re.regexp);
+    console.log("13. REGEXP toEnd[false]:", reend.regexp);
+    it("шаблон не совпадает со строкой ''.             результат: `undefined`", function () {
+      assert.equal(re.match(""), undefined);
+      assert.equal(reend.match(""), undefined);
     });
-    it("шаблон не совпадает со строкой '/'.            результат: `undefined`", function() {
-      assert.equal( re.match("/"), undefined);
-    });
-
-    it("шаблон совпадает со строкой 'foo'.             результат: `undefined`", function() {
-      assert.equal( re.match("foo"), undefined);
-    });   
-    it("шаблон совпадает со строкой '/foo'.            результат: `undefined`", function() {
-      assert.equal( re.match("/foo"), undefined);
-    });   
-    it("шаблон совпадает со строкой 'foo/'.            результат: `undefined`", function() {
-      assert.equal( re.match("foo/"), undefined);
-    });   
-    it("шаблон совпадает со строкой '/foo/'.           результат: `undefined`", function() {
-      assert.equal( re.match("/foo/"), undefined);
-    });   
-
-    it("шаблон совпадает со строкой 'foo/bar'.         результат: `{bar:['bar']}`", function() {
-      expect( re.match("foo/bar") ).to.deep.equal({bar:['bar']});
-    });
-    it("шаблон совпадает со строкой '/foo/bar'.        результат: `{bar:['bar']}`", function() {
-      expect( re.match("/foo/bar") ).to.deep.equal({bar:['bar']});
-    });
-    it("шаблон совпадает со строкой 'foo/bar/'.        результат: `{bar:['bar']}`", function() {
-      expect( re.match("foo/bar/") ).to.deep.equal({bar:['bar']});
-    });
-    it("шаблон совпадает со строкой '/foo/bar/'.       результат: `{bar:['bar']}`", function() {
-      expect( re.match("/foo/bar/") ).to.deep.equal({bar:['bar']});
+    it("шаблон не совпадает со строкой '/'.            результат: `undefined`", function () {
+      assert.equal(re.match("/"), undefined);
+      assert.equal(reend.match("/"), undefined);
     });
 
-    it("шаблон совпадает со строкой 'foo/bar/baz'.     результат: `{bar:['bar/baz']}`", function() {
-      expect( re.match("foo/bar/baz") ).to.deep.equal({ bar: ['bar/baz'] });
-    });   
-    it("шаблон совпадает со строкой '/foo/bar/baz'.    результат: `{bar:['bar/baz']}`", function() {
-      expect( re.match("/foo/bar/baz") ).to.deep.equal({ bar: ['bar/baz'] });
-    });   
-    it("шаблон совпадает со строкой 'foo/bar/baz/'.    результат: `{bar:['bar/baz']}`", function() {
-      expect( re.match("foo/bar/baz/") ).to.deep.equal({ bar: ['bar/baz'] });
-    });   
-    it("шаблон совпадает со строкой '/foo/bar/baz/'.   результат: `{bar:['bar/baz']}`", function() {
-      expect( re.match("/foo/bar/baz/") ).to.deep.equal({ bar: ['bar/baz'] });
+    it("шаблон совпадает со строкой 'foo'.             результат: `undefined`", function () {
+      assert.equal(re.match("foo"), undefined);
+      assert.equal(reend.match("foo"), undefined);
+    });
+    it("шаблон совпадает со строкой '/foo'.            результат: `undefined`", function () {
+      assert.equal(re.match("/foo"), undefined);
+      assert.equal(reend.match("/foo"), undefined);
+    });
+    it("шаблон совпадает со строкой 'foo/'.            результат: `undefined`", function () {
+      assert.equal(re.match("foo/"), undefined);
+      assert.equal(reend.match("foo/"), undefined);
+    });
+    it("шаблон совпадает со строкой '/foo/'.           результат: `undefined`", function () {
+      assert.equal(re.match("/foo/"), undefined);
+      assert.equal(reend.match("/foo/"), undefined);
+    });
+
+    it("шаблон совпадает со строкой 'foo/bar'.         результат: `{bar:['bar']}`", function () {
+      expect(re.match("foo/bar")).to.deep.equal({ bar: ['bar'] });
+      expect(reend.match("foo/bar")).to.deep.equal({ bar: ['bar'] });
+    });
+    it("шаблон совпадает со строкой '/foo/bar'.        результат: `{bar:['bar']}`", function () {
+      expect(re.match("/foo/bar")).to.deep.equal({ bar: ['bar'] });
+      expect(reend.match("/foo/bar")).to.deep.equal({ bar: ['bar'] });
+    });
+    it("шаблон совпадает со строкой 'foo/bar/'.        результат: `{bar:['bar']}`", function () {
+      expect(re.match("foo/bar/")).to.deep.equal({ bar: ['bar'] });
+      expect(reend.match("foo/bar/")).to.deep.equal({ bar: ['bar'] });
+    });
+    it("шаблон совпадает со строкой '/foo/bar/'.       результат: `{bar:['bar']}`", function () {
+      expect(re.match("/foo/bar/")).to.deep.equal({ bar: ['bar'] });
+      expect(reend.match("/foo/bar/")).to.deep.equal({ bar: ['bar'] });
+    });
+
+    it("шаблон совпадает со строкой 'foo/bar/baz'.     результат: `{bar:['bar/baz']}`", function () {
+      expect(re.match("foo/bar/baz")).to.deep.equal({ bar: ['bar/baz'] });
+      expect(reend.match("foo/bar/baz")).to.deep.equal({ bar: ['bar/baz'] });
+    });
+    it("шаблон совпадает со строкой '/foo/bar/baz'.    результат: `{bar:['bar/baz']}`", function () {
+      expect(re.match("/foo/bar/baz")).to.deep.equal({ bar: ['bar/baz'] });
+      expect(reend.match("/foo/bar/baz")).to.deep.equal({ bar: ['bar/baz'] });
+    });
+    it("шаблон совпадает со строкой 'foo/bar/baz/'.    результат: `{bar:['bar/baz']}`", function () {
+      expect(re.match("foo/bar/baz/")).to.deep.equal({ bar: ['bar/baz'] });
+      expect(reend.match("foo/bar/baz/")).to.deep.equal({ bar: ['bar/baz'] });
+    });
+    it("шаблон совпадает со строкой '/foo/bar/baz/'.   результат: `{bar:['bar/baz']}`", function () {
+      expect(re.match("/foo/bar/baz/")).to.deep.equal({ bar: ['bar/baz'] });
+      expect(reend.match("/foo/bar/baz/")).to.deep.equal({ bar: ['bar/baz'] });
     });
   });
 
 
-  describe("14. Тестируем шаблон '/user/:id/bar/:key(\\d+):post?fak/:key(\\d+)*:foo+/test/pictures-:multi(\\w+?\\.png)*/:key?'", function() {
+  describe("14. Тестируем шаблон '/user/:id/bar/:key(\\d+):post?fak/:key(\\d+)*:foo+/test/pictures-:multi(\\w+?\\.png)*/:key?'", function () {
     const re = new PathToRegex("/user/:id/bar/:key(\\d+):post?fak/:key(\\d+)*:foo+/test/pictures-:multi(\\w+?\\.png)*/:key?");
-    console.log("14. REGEXP:",re.regexp);
-    it("шаблон совпадает со строкой '/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png, p02.png, p03.png/333'.   \n\tрезультат: `{ id: '123',   key: [ '111', '222', '333' ],   post: 'qwerty',   foo: [ 'foo' ],   multi: [ 'p01.png', 'p02.png', 'p03.png' ] }`", function() {
-      expect( re.match("/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png, p02.png, p03.png/333") ).to.deep.equal({ id: '123',   key: [ '111', '222', '333' ],   post: 'qwerty',   foo: [ 'foo' ],   multi: [ 'p01.png', 'p02.png', 'p03.png' ] });
+    console.log("14. REGEXP:", re.regexp);
+    it("шаблон совпадает со строкой '/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png, p02.png, p03.png/333'.   \n\tрезультат: `{ id: '123',   key: [ '111', '222', '333' ],   post: 'qwerty',   foo: [ 'foo' ],   multi: [ 'p01.png', 'p02.png', 'p03.png' ] }`", function () {
+      expect(re.match("/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png, p02.png, p03.png/333")).to.deep.equal({ id: '123', key: ['111', '222', '333'], post: 'qwerty', foo: ['foo'], multi: ['p01.png', 'p02.png', 'p03.png'] });
     });
-    it("шаблон совпадает со строкой '/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png, p02.png, p03.png'.       \n\tрезультат: `{ id: '123',   key: [ '111', '222' ],   post: 'qwerty',   foo: [ 'foo' ],   multi: [ 'p01.png', 'p02.png', 'p03.png' ] }`", function() {
-      expect( re.match("/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png, p02.png, p03.png") ).to.deep.equal({ id: '123',   key: [ '111', '222' ],   post: 'qwerty',   foo: [ 'foo' ],   multi: [ 'p01.png', 'p02.png', 'p03.png' ] });
+    it("шаблон совпадает со строкой '/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png, p02.png, p03.png'.       \n\tрезультат: `{ id: '123',   key: [ '111', '222' ],   post: 'qwerty',   foo: [ 'foo' ],   multi: [ 'p01.png', 'p02.png', 'p03.png' ] }`", function () {
+      expect(re.match("/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png, p02.png, p03.png")).to.deep.equal({ id: '123', key: ['111', '222'], post: 'qwerty', foo: ['foo'], multi: ['p01.png', 'p02.png', 'p03.png'] });
     });
-    it("шаблон совпадает со строкой '/user/123/bar/111fak/foo/test/pictures-p01.png, p02.png, p03.png'.       \n\tрезультат: `{ id: '123',   key: [ '111' ],   post: undefined,   foo: [ 'foo' ],   multi: [ 'p01.png', 'p02.png', 'p03.png' ] }`", function() {
-      expect( re.match("/user/123/bar/111fak/foo/test/pictures-p01.png, p02.png, p03.png") ).to.deep.equal({ id: '123',   key: [ '111' ],   post: undefined,   foo: [ 'foo' ],   multi: [ 'p01.png', 'p02.png', 'p03.png' ] });
-    });    
-    it("шаблон совпадает со строкой '/user/123/bar/111fak/foo/test/pictures-p01.png'.       \n\tрезультат: `{ id: '123',   key: [ '111' ],   post: undefined,   foo: [ 'foo' ],   multi: [ 'p01.png' ] }`", function() {
-      expect( re.match("/user/123/bar/111fak/foo/test/pictures-p01.png") ).to.deep.equal({ id: '123',   key: [ '111' ],   post: undefined,   foo: [ 'foo' ],   multi: [ 'p01.png' ] });
-    });    
+    it("шаблон совпадает со строкой '/user/123/bar/111fak/foo/test/pictures-p01.png, p02.png, p03.png'.       \n\tрезультат: `{ id: '123',   key: [ '111' ],   post: undefined,   foo: [ 'foo' ],   multi: [ 'p01.png', 'p02.png', 'p03.png' ] }`", function () {
+      expect(re.match("/user/123/bar/111fak/foo/test/pictures-p01.png, p02.png, p03.png")).to.deep.equal({ id: '123', key: ['111'], post: undefined, foo: ['foo'], multi: ['p01.png', 'p02.png', 'p03.png'] });
+    });
+    it("шаблон совпадает со строкой '/user/123/bar/111fak/foo/test/pictures-p01.png'.       \n\tрезультат: `{ id: '123',   key: [ '111' ],   post: undefined,   foo: [ 'foo' ],   multi: [ 'p01.png' ] }`", function () {
+      expect(re.match("/user/123/bar/111fak/foo/test/pictures-p01.png")).to.deep.equal({ id: '123', key: ['111'], post: undefined, foo: ['foo'], multi: ['p01.png'] });
+    });
 
   });
 
@@ -613,7 +786,7 @@ describe("Тестируем модуль преобразования пути 
   // });  
 
   // const re3 = new PathToRegex("/foo/:fooid/bar/:barid");
-  
+
   // it("создаем RegExp из \"/foo/:fooid/bar/:barid\"", function() {
   //   assert.equal( re3 instanceof PathToRegex, true);
   //   assert.equal( ""+re3.regexp, ""+/^\/foo\/([^\/]+)\/bar\/([^\/]+)[\/]?$/ );
