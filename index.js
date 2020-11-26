@@ -79,8 +79,11 @@ Regex.prototype.restructurePath = function (path) {
 
 	let offset = 0;
 	let count = 0;
+	// 11. REGEXP toEnd[true]: /^[\/]?foo\/(.*?)[\/]?$/
+	// 11. REGEXP toEnd[false]: /^[\/]?foo\/(.*?)([\/]|[\/]?$)/i
 
 	path = path.replace(new RegExp("^" + separator + "*(.*?)" + separator + "*$"), "$1");
+	//path += this.options.separators[0];
 
 	path.replace(/:([a-z]\w*)(\((.*?)\))?([\?\*\+])?/gi, (str, key, a, pat, quant, index, string) => {
 		// console.log("-----------------------------");
@@ -93,10 +96,10 @@ Regex.prototype.restructurePath = function (path) {
 		// console.log("string:", string);
 		count++;
 
-		const pattern = (pat ? pat : notseparator + "+");
+
 
 		const isMultiple = (quant === "*" || quant === "+") ? true : false;
-		// if (pat && /^(\[[^\[\]]+\]|\([^\(\)]+\)|\.|\\.)[\+\*]$/.test(pat) ) isMultiple = true;
+		const isExtrude = /^(\[[^\[\]]+\]|\([^\(\)]+\)|\.|\\.)[\+\*]$/.test(pat) ? true : false;
 
 		let isRequired = (quant !== "*" && quant !== "?") ? true : false;
 		if (!quant && pat && /^(\[[^\[\]]+\]|\([^\(\)]+\)|\.|\\.)[\*\?]?$/.test(pat)) isRequired = false;
@@ -118,7 +121,7 @@ Regex.prototype.restructurePath = function (path) {
 
 		if (isToken && index) {
 			if (!isMultiple || !isRequired) {
-				if (quant || pat) {
+				if (pat && !isExtrude) {
 					this.regstr += "?";
 				}
 			}
@@ -129,14 +132,20 @@ Regex.prototype.restructurePath = function (path) {
 		//console.log("isToken", isToken);
 		//console.log("this.regstr 1:", this.regstr);
 
+		const pattern = (pat ? pat : notseparator + "+");
+
 		const regstr =
 			isMultiple ?
 				isToken ?
-					"((?:" + separator + "?" + pattern + ")" + quantifier + ")" :
+					isExtrude ?
+						"((?:" + separator + "?" + pattern + ")" + quantifier + ")" :
+						"((?:" + separator + "" + pattern + ")" + quantifier + ")" :
 					"((?:" + notseparator + "*" + pattern + ")" + quantifier + ")" :
 				isToken ?
-					"(" + pattern + "?)" + quantifier :
-					"(" + pattern + (pat ? "" : "?") + ")" + quantifier;
+					isExtrude ?
+						"(" + pattern + "?)" + quantifier :
+						"(" + pattern + ")" + quantifier :
+					"(" + pattern + ")" + quantifier;
 
 		this.regstr += regstr;
 
@@ -205,6 +214,10 @@ Regex.prototype.match = function (path) {
 
 	if (typeof path !== "string") return;
 
+	const reseparator = this.options.separator;
+	const separator = this.options.separators[0];
+	path = path.replace(new RegExp("^" + reseparator + "*(.*?)" + reseparator + "*$"), separator + "$1" + separator);
+
 	// console.log("match 02");
 	const result = path.match(this.regexp);
 	// console.log("match 03");
@@ -248,7 +261,7 @@ Regex.prototype.match = function (path) {
 		if (result[item.index])
 			result[item.index].replace(item.regexp, str => {
 				if (str) data[item.key].push(
-					str.replace(new RegExp(this.options.separator + "*$"), "")
+					str.replace(new RegExp(reseparator + "*$"), "")
 				);
 			});
 

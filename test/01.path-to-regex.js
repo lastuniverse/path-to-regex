@@ -355,7 +355,7 @@ describe("Тестируем модуль преобразования пути 
     const reend = new PathToRegex(":path(.*)", { case: false, toEnd: false });
     console.log("08. REGEXP toEnd[true]:", re.regexp);
     console.log("08. REGEXP toEnd[false]:", reend.regexp);
-    it("шаблон совпадает со строкой '/'.            результат: `{path: undefined}`", function () {
+    it("шаблон совпадает со строкой '/'.            результат: `{path:undefined}`", function () {
       expect(re.match("/")).to.deep.equal({ path: undefined });
       expect(reend.match("/")).to.deep.equal({ path: undefined });
     });
@@ -825,8 +825,50 @@ describe("Тестируем модуль преобразования пути 
   });
 
 
+  describe("16. Тестируем шаблон '/:foo/:bar/:baz(.*)'", function () {
+    const re = new PathToRegex("/:foo/:bar/:baz(.*)");
+    const reend = new PathToRegex("/:foo/:bar/:baz(.*)", { case: false, toEnd: false });
+    console.log("16. REGEXP toEnd[true]: ", re.regexp);
+    console.log("16. REGEXP toEnd[false]:", reend.regexp);
 
+    it("16.1 шаблон совпадает со строкой '/foo/bar'.   \n\tрезультат: `{ foo: 'foo', bar: 'bar', baz: undefined }`", function () {
+      expect(re.match("/foo/bar")).to.deep.equal({ foo: 'foo', bar: 'bar', baz: undefined });
+      expect(reend.match("/foo/bar")).to.deep.equal({ foo: 'foo', bar: 'bar', baz: undefined });
+    });
 
+    it("16.2 шаблон совпадает со строкой '/foo/bar/baz'.   \n\tрезультат: `{ foo: 'foo', bar: 'bar', baz: 'baz' }`", function () {
+      expect(re.match("/foo/bar/baz")).to.deep.equal({ foo: 'foo', bar: 'bar', baz: 'baz' });
+      expect(reend.match("/foo/bar/baz")).to.deep.equal({ foo: 'foo', bar: 'bar', baz: 'baz' });
+    });
+
+    it("16.3 шаблон совпадает со строкой '/foo/bar/baz/eve'.   \n\tрезультат: `{ foo: 'foo', bar: 'bar', baz: 'baz/eve' }`", function () {
+      expect(re.match("/foo/bar/baz/eve")).to.deep.equal({ foo: 'foo', bar: 'bar', baz: 'baz/eve' });
+      expect(reend.match("/foo/bar/baz/eve")).to.deep.equal({ foo: 'foo', bar: 'bar', baz: 'baz' });
+    });
+  });
+
+  describe("17. Тестируем шаблон '/:foo/:bar/:baz(.*)*'", function () {
+    const re = new PathToRegex("/:foo/:bar/:baz(.*)*");
+    const reend = new PathToRegex("/:foo/:bar/:baz(.*)*", { case: false, toEnd: false });
+    console.log("17. REGEXP toEnd[true]: ", re.regexp);
+    console.log("17. REGEXP toEnd[false]:", reend.regexp);
+
+    it("17.1 шаблон совпадает со строкой '/foo/bar'.   \n\tрезультат: `{ foo: 'foo', bar: 'bar', baz: [] }`", function () {
+      expect(re.match("/foo/bar")).to.deep.equal({ foo: 'foo', bar: 'bar', baz: [] });
+      expect(reend.match("/foo/bar")).to.deep.equal({ foo: 'foo', bar: 'bar', baz: [] });
+    });
+
+    it("17.2 шаблон совпадает со строкой '/foo/bar/baz'.   \n\tрезультат: `{ foo: 'foo', bar: 'bar', baz: ['baz'] }`", function () {
+      expect(re.match("/foo/bar/baz")).to.deep.equal({ foo: 'foo', bar: 'bar', baz: ['baz'] });
+      expect(reend.match("/foo/bar/baz")).to.deep.equal({ foo: 'foo', bar: 'bar', baz: ['baz'] });
+    });
+
+    it("17.3 шаблон совпадает со строкой '/foo/bar/baz/eve'.   \n\tрезультат: `{ foo: 'foo', bar: 'bar', baz: ['baz/eve'] }`", function () {
+      expect(re.match("/foo/bar/baz/eve")).to.deep.equal({ foo: 'foo', bar: 'bar', baz: ['baz/eve'] });
+      expect(reend.match("/foo/bar/baz/eve")).to.deep.equal({ foo: 'foo', bar: 'bar', baz: ['baz/eve'] });
+    });
+
+  });
 
 
 
