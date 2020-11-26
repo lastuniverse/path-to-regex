@@ -124,10 +124,10 @@ Regex.prototype.restructurePath = function (path) {
 			}
 		}
 
-		console.log("isStarted", isStarted);
-		console.log("isStoped", isStoped);
-		console.log("isToken", isToken);
-		console.log("this.regstr 1:", this.regstr);
+		//console.log("isStarted", isStarted);
+		//console.log("isStoped", isStoped);
+		//console.log("isToken", isToken);
+		//console.log("this.regstr 1:", this.regstr);
 
 		const regstr =
 			isMultiple ?
