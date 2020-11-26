@@ -733,26 +733,96 @@ describe("Тестируем модуль преобразования пути 
     });
   });
 
+  describe("14. Тестируем шаблон '/foo/:bar/:baz'", function () {
+    const re = new PathToRegex("/foo/:bar/:baz");
+    const reend = new PathToRegex("/foo/:bar/:baz", { case: false, toEnd: false });
+    console.log("14. REGEXP toEnd[true]:", re.regexp);
+    console.log("14. REGEXP toEnd[false]:", reend.regexp);
+    it("14.1 шаблон не совпадает со строкой ''.             результат: `undefined`", function () {
+      assert.equal(re.match(""), undefined);
+      assert.equal(reend.match(""), undefined);
+    });
+    it("14.2 шаблон не совпадает со строкой '/'.            результат: `undefined`", function () {
+      assert.equal(re.match("/"), undefined);
+      assert.equal(reend.match("/"), undefined);
+    });
 
-  describe("14. Тестируем шаблон '/user/:id/bar/:key(\\d+):post?fak/:key(\\d+)*:foo+/test/pictures-:multi(\\w+?\\.png)*/:key?'", function () {
-    const re = new PathToRegex("/user/:id/bar/:key(\\d+):post?fak/:key(\\d+)*:foo+/test/pictures-:multi(\\w+?\\.png)*/:key?");
-    console.log("14. REGEXP:", re.regexp);
-    it("шаблон совпадает со строкой '/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png, p02.png, p03.png/333'.   \n\tрезультат: `{ id: '123',   key: [ '111', '222', '333' ],   post: 'qwerty',   foo: [ 'foo' ],   multi: [ 'p01.png', 'p02.png', 'p03.png' ] }`", function () {
-      expect(re.match("/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png, p02.png, p03.png/333")).to.deep.equal({ id: '123', key: ['111', '222', '333'], post: 'qwerty', foo: ['foo'], multi: ['p01.png', 'p02.png', 'p03.png'] });
+    it("14.3 шаблон не совпадает со строкой 'foo'.             результат: `undefined`", function () {
+      assert.equal(re.match("foo"), undefined);
+      assert.equal(reend.match("foo"), undefined);
     });
-    it("шаблон совпадает со строкой '/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png, p02.png, p03.png'.       \n\tрезультат: `{ id: '123',   key: [ '111', '222' ],   post: 'qwerty',   foo: [ 'foo' ],   multi: [ 'p01.png', 'p02.png', 'p03.png' ] }`", function () {
-      expect(re.match("/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png, p02.png, p03.png")).to.deep.equal({ id: '123', key: ['111', '222'], post: 'qwerty', foo: ['foo'], multi: ['p01.png', 'p02.png', 'p03.png'] });
+    it("14.4 шаблон не совпадает со строкой '/foo'.            результат: `undefined`", function () {
+      assert.equal(re.match("/foo"), undefined);
+      assert.equal(reend.match("/foo"), undefined);
     });
-    it("шаблон совпадает со строкой '/user/123/bar/111fak/foo/test/pictures-p01.png, p02.png, p03.png'.       \n\tрезультат: `{ id: '123',   key: [ '111' ],   post: undefined,   foo: [ 'foo' ],   multi: [ 'p01.png', 'p02.png', 'p03.png' ] }`", function () {
-      expect(re.match("/user/123/bar/111fak/foo/test/pictures-p01.png, p02.png, p03.png")).to.deep.equal({ id: '123', key: ['111'], post: undefined, foo: ['foo'], multi: ['p01.png', 'p02.png', 'p03.png'] });
+    it("14.5 шаблон не совпадает со строкой 'foo/'.            результат: `undefined`", function () {
+      assert.equal(re.match("foo/"), undefined);
+      assert.equal(reend.match("foo/"), undefined);
     });
-    it("шаблон совпадает со строкой '/user/123/bar/111fak/foo/test/pictures-p01.png'.       \n\tрезультат: `{ id: '123',   key: [ '111' ],   post: undefined,   foo: [ 'foo' ],   multi: [ 'p01.png' ] }`", function () {
-      expect(re.match("/user/123/bar/111fak/foo/test/pictures-p01.png")).to.deep.equal({ id: '123', key: ['111'], post: undefined, foo: ['foo'], multi: ['p01.png'] });
+    it("14.6 шаблон не совпадает со строкой '/foo/'.           результат: `undefined`", function () {
+      assert.equal(re.match("/foo/"), undefined);
+      assert.equal(reend.match("/foo/"), undefined);
+    });
+
+    it("14.7 шаблон не совпадает со строкой 'foo/bar'.             результат: `undefined`. " + re.regexp, function () {
+      assert.equal(re.match("foo/bar"), undefined);
+      assert.equal(reend.match("foo/bar"), undefined);
+    });
+    it("14.8 шаблон совпадает со строкой '/foo/bar'.            результат: `undefined`", function () {
+      assert.equal(re.match("/foo/bar"), undefined);
+      assert.equal(reend.match("/foo/bar"), undefined);
+    });
+    it("14.9 шаблон совпадает со строкой 'foo/bar/'.            результат: `undefined`", function () {
+      assert.equal(re.match("foo/bar/"), undefined);
+      assert.equal(reend.match("foo/bar/"), undefined);
+    });
+    it("14.10 шаблон совпадает со строкой '/foo/bar/'.           результат: `undefined`", function () {
+      assert.equal(re.match("/foo/bar/"), undefined);
+      assert.equal(reend.match("/foo/bar/"), undefined);
+    });
+
+    it("14.11 шаблон совпадает со строкой 'foo/bar/baz'.         результат: `{ bar: 'bar', baz: 'baz' }`", function () {
+      expect(re.match("foo/bar/baz")).to.deep.equal({ bar: 'bar', baz: 'baz' });
+      expect(reend.match("foo/bar/baz")).to.deep.equal({ bar: 'bar', baz: 'baz' });
+    });
+    it("14.12 шаблон совпадает со строкой 'foo/bar/baz'.         результат: `{ bar: 'bar', baz: 'baz' }`", function () {
+      expect(re.match("/foo/bar/baz")).to.deep.equal({ bar: 'bar', baz: 'baz' });
+      expect(reend.match("/foo/bar/baz")).to.deep.equal({ bar: 'bar', baz: 'baz' });
+    });
+    it("14.13 шаблон совпадает со строкой 'foo/bar/baz'.         результат: `{ bar: 'bar', baz: 'baz' }`", function () {
+      expect(re.match("foo/bar/baz/")).to.deep.equal({ bar: 'bar', baz: 'baz' });
+      expect(reend.match("foo/bar/baz/")).to.deep.equal({ bar: 'bar', baz: 'baz' });
+    });
+    it("14.14 шаблон совпадает со строкой 'foo/bar/baz'.         результат: `{ bar: 'bar', baz: 'baz' }`", function () {
+      expect(re.match("/foo/bar/baz/")).to.deep.equal({ bar: 'bar', baz: 'baz' });
+      expect(reend.match("/foo/bar/baz/")).to.deep.equal({ bar: 'bar', baz: 'baz' });
     });
 
   });
 
+  describe("15. Тестируем шаблон '/user/:id/bar/:key(\\d+):post?fak/:key(\\d+)*:foo+/test/pictures-:multi(\\w+?\\.png)*/:key?'", function () {
+    const re = new PathToRegex("/user/:id/bar/:key(\\d+):post?fak/:key(\\d+)*:foo+/test/pictures-:multi(\\w+?\\.png)*/:key?");
+    const reend = new PathToRegex("/user/:id/bar/:key(\\d+):post?fak/:key(\\d+)*:foo+/test/pictures-:multi(\\w+?\\.png)*/:key?", { case: false, toEnd: false });
+    console.log("15. REGEXP toEnd[true]: ", re.regexp);
+    console.log("15. REGEXP toEnd[false]:", reend.regexp);
 
+    it("15.1 шаблон совпадает со строкой '/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png, p02.png, p03.png/333'.   \n\tрезультат: `{ id: '123',   key: [ '111', '222', '333' ],   post: 'qwerty',   foo: [ 'foo' ],   multi: [ 'p01.png', 'p02.png', 'p03.png' ] }`", function () {
+      expect(re.match("/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png, p02.png, p03.png/333")).to.deep.equal({ id: '123', key: ['111', '222', '333'], post: 'qwerty', foo: ['foo'], multi: ['p01.png', 'p02.png', 'p03.png'] });
+      expect(reend.match("/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png, p02.png, p03.png/333")).to.deep.equal({ id: '123', key: ['111', '222', '333'], post: 'qwerty', foo: ['foo'], multi: ['p01.png', 'p02.png', 'p03.png'] });
+    });
+    it("15.2 шаблон совпадает со строкой '/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png, p02.png, p03.png'.       \n\tрезультат: `{ id: '123',   key: [ '111', '222' ],   post: 'qwerty',   foo: [ 'foo' ],   multi: [ 'p01.png', 'p02.png', 'p03.png' ] }`", function () {
+      expect(re.match("/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png, p02.png, p03.png")).to.deep.equal({ id: '123', key: ['111', '222'], post: 'qwerty', foo: ['foo'], multi: ['p01.png', 'p02.png', 'p03.png'] });
+      expect(reend.match("/user/123/bar/111qwertyfak/222foo/test/pictures-p01.png, p02.png, p03.png")).to.deep.equal({ id: '123', key: ['111', '222'], post: 'qwerty', foo: ['foo'], multi: ['p01.png', 'p02.png', 'p03.png'] });
+
+    });
+    it("15.3 шаблон совпадает со строкой '/user/123/bar/111fak/foo/test/pictures-p01.png, p02.png, p03.png'.       \n\tрезультат: `{ id: '123',   key: [ '111' ],   post: undefined,   foo: [ 'foo' ],   multi: [ 'p01.png', 'p02.png', 'p03.png' ] }`", function () {
+      expect(re.match("/user/123/bar/111fak/foo/test/pictures-p01.png, p02.png, p03.png")).to.deep.equal({ id: '123', key: ['111'], post: undefined, foo: ['foo'], multi: ['p01.png', 'p02.png', 'p03.png'] });
+    });
+    it("15.4 шаблон совпадает со строкой '/user/123/bar/111fak/foo/test/pictures-p01.png'.       \n\tрезультат: `{ id: '123',   key: [ '111' ],   post: undefined,   foo: [ 'foo' ],   multi: [ 'p01.png' ] }`", function () {
+      expect(re.match("/user/123/bar/111fak/foo/test/pictures-p01.png")).to.deep.equal({ id: '123', key: ['111'], post: undefined, foo: ['foo'], multi: ['p01.png'] });
+    });
+
+  });
 
 
 

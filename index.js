@@ -85,20 +85,25 @@ Regex.prototype.restructurePath = function (path) {
 	path.replace(/:([a-z]\w*)(\((.*?)\))?([\?\*\+])?/gi, (str, key, a, pat, quant, index, string) => {
 		// console.log("-----------------------------");
 		// console.log("str:", str);
-		// console.log("key:",key);
-		// console.log("a:",a);
-		// console.log("pat:",pat);
-		// console.log("quant:",quant);
-		// console.log("index:",index);
-		// console.log("string:",string);
+		// console.log("key:", key);
+		// console.log("a:", a);
+		// console.log("pat:", pat);
+		// console.log("quant:", quant);
+		// console.log("index:", index);
+		// console.log("string:", string);
 		count++;
 
-		// let pq = pat?pat[pat.length-1]:"";
-		// pq = (pq==="+"||pq==="*")?"?":"";
 		const pattern = (pat ? pat : notseparator + "+");
+
 		const isMultiple = (quant === "*" || quant === "+") ? true : false;
-		const isRequired = (quant !== "*" && quant !== "?") ? true : false;
+		// if (pat && /^(\[[^\[\]]+\]|\([^\(\)]+\)|\.|\\.)[\+\*]$/) isMultiple = true;
+
+		let isRequired = (quant !== "*" && quant !== "?") ? true : false;
+		if (!quant && pat && /^(\[[^\[\]]+\]|\([^\(\)]+\)|\.|\\.)[\*\?]?$/) isRequired = false;
+
 		const quantifier = quant ? quant : "";
+		// console.log("isMultiple", isMultiple);
+		// console.log("isRequired", isRequired);
 
 		// const startChar = path.charAt(index-1);
 		const isStarted = (!index) ? true : this.separator(path.charAt(index - 1));
@@ -111,8 +116,18 @@ Regex.prototype.restructurePath = function (path) {
 			this.regstr += regstr;
 		}
 
-		if (isToken && index && (!isMultiple || !isRequired))
-			this.regstr += "?";
+		if (isToken && index) {
+			if (!isMultiple || !isRequired) {
+				if (quant || pat) {
+					this.regstr += "?";
+				}
+			}
+		}
+
+		console.log("isStarted", isStarted);
+		console.log("isStoped", isStoped);
+		console.log("isToken", isToken);
+		console.log("this.regstr 1:", this.regstr);
 
 		const regstr =
 			isMultiple ?
@@ -124,7 +139,6 @@ Regex.prototype.restructurePath = function (path) {
 					"(" + pattern + (pat ? "" : "?") + ")" + quantifier;
 
 		this.regstr += regstr;
-		//    /^[\/]?foo\/?((?:[\/]?.+)+)[\/]?$/
 
 		const data = {
 			key: key,
