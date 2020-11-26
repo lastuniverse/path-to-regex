@@ -96,10 +96,10 @@ Regex.prototype.restructurePath = function (path) {
 		const pattern = (pat ? pat : notseparator + "+");
 
 		const isMultiple = (quant === "*" || quant === "+") ? true : false;
-		// if (pat && /^(\[[^\[\]]+\]|\([^\(\)]+\)|\.|\\.)[\+\*]$/) isMultiple = true;
+		// if (pat && /^(\[[^\[\]]+\]|\([^\(\)]+\)|\.|\\.)[\+\*]$/.test(pat) ) isMultiple = true;
 
 		let isRequired = (quant !== "*" && quant !== "?") ? true : false;
-		if (!quant && pat && /^(\[[^\[\]]+\]|\([^\(\)]+\)|\.|\\.)[\*\?]?$/) isRequired = false;
+		if (!quant && pat && /^(\[[^\[\]]+\]|\([^\(\)]+\)|\.|\\.)[\*\?]?$/.test(pat)) isRequired = false;
 
 		const quantifier = quant ? quant : "";
 		// console.log("isMultiple", isMultiple);
